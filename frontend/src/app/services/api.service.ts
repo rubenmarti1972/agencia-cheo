@@ -13,8 +13,10 @@ export class ApiService {
   private readonly http = inject(HttpClient);
 
   // URL base de la API de Strapi
-  // En desarrollo apunta a localhost:1337, en producción debe configurarse
-  private readonly API_URL = 'http://localhost:1337/api';
+  // En desarrollo apunta a localhost:1337; en otros entornos se puede sobreescribir con NG_APP_API_URL
+  private readonly API_URL =
+    (import.meta as { env: Record<string, string | undefined> }).env['NG_APP_API_URL'] ??
+    'http://localhost:1337/api';
 
   protected get<T>(endpoint: string): Observable<T> {
     return this.http.get<T>(`${this.API_URL}${endpoint}`).pipe(
