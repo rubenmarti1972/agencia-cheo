@@ -1,0 +1,38 @@
+{
+  "kind": "collectionType",
+  "collectionName": "parley_legs",
+  "info": {
+    "singularName": "parley-leg",
+    "pluralName": "parley-legs",
+    "displayName": "Parley Leg",
+    "description": "Cada selección dentro de un ticket de parley"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ticket": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::parley-ticket.parley-ticket",
+      "inversedBy": "legs"
+    },
+    "market": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::market.market"
+    },
+    "odds": {
+      "type": "decimal",
+      "required": true,
+      "description": "Odd de esta selección al momento de la apuesta"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "won", "lost", "void"],
+      "default": "pending",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,115 @@
+<div class="ticket-page">
+  <div class="container">
+    <h1 class="text-center">Consultar Ticket</h1>
+    <p class="text-center text-secondary">
+      Ingresa el código de tu ticket para verificar su estado y resultado
+    </p>
+
+    <!-- Formulario de búsqueda -->
+    <div class="search-section card">
+      <form [formGroup]="ticketForm" (ngSubmit)="searchTicket()">
+        <div class="form-group">
+          <label for="ticketCode">Código del Ticket</label>
+          <input
+            type="text"
+            id="ticketCode"
+            formControlName="ticketCode"
+            placeholder="Ej: LOT-1234567890-ABCD"
+            [class.error]="ticketForm.get('ticketCode')?.invalid && ticketForm.get('ticketCode')?.touched"
+          />
+          @if (ticketForm.get('ticketCode')?.invalid && ticketForm.get('ticketCode')?.touched) {
+            <span class="error-message">El código del ticket es requerido</span>
+          }
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" [disabled]="loading() || ticketForm.invalid">
+          @if (loading()) {
+            <span>Buscando...</span>
+          } @else {
+            <span>Buscar Ticket</span>
+          }
+        </button>
+      </form>
+    </div>
+
+    <!-- Mensaje de error -->
+    @if (error()) {
+      <div class="error-card card">
+        <p class="text-center">{{ error() }}</p>
+      </div>
+    }
+
+    <!-- Resultado del ticket -->
+    @if (ticketResult()) {
+      <div class="ticket-result card fade-in">
+        <div class="ticket-header">
+          <h2>Ticket {{ ticketResult()!.type === 'lottery' ? 'Lotería' : ticketResult()!.type === 'animalitos' ? 'Animalitos' : 'Parley' }}</h2>
+          <span class="badge" [class]="getStatusBadgeClass(ticketResult()!.ticket.status)">
+            {{ getStatusText(ticketResult()!.ticket.status) }}
+          </span>
+        </div>
+
+        <div class="ticket-details">
+          <div class="detail-row">
+            <span class="label">Código:</span>
+            <span class="value font-semibold">{{ ticketResult()!.ticket.ticketCode }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Monto Apostado:</span>
+            <span class="value">Bs. {{ ticketResult()!.ticket.betAmount | number:'1.2-2' }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Ganancia Potencial:</span>
+            <span class="value text-accent font-bold">Bs. {{ ticketResult()!.ticket.potentialWin | number:'1.2-2' }}</span>
+          </div>
+
+          @if (ticketResult()!.ticket.status === 'won') {
+            <div class="detail-row highlight">
+              <span class="label">Ganancia:</span>
+              <span class="value text-accent font-bold">Bs. {{ ticketResult()!.ticket.paidAmount | number:'1.2-2' }}</span>
+            </div>
+          }
+
+          @if (ticketResult()!.ticket.userName) {
+            <div class="detail-row">
+              <span class="label">Nombre:</span>
+              <span class="value">{{ ticketResult()!.ticket.userName }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- Detalles específicos por tipo -->
+        @if (ticketResult()!.type === 'lottery') {
+          <div class="type-details">
+            <h4>Detalles de la Lotería</h4>
+            <p><strong>Número Apostado:</strong> {{ (ticketResult()!.ticket as any).betNumber }}</p>
+          </div>
+        }
+
+        @if (ticketResult()!.type === 'animalitos') {
+          <div class="type-details">
+            <h4>Detalles de Animalitos</h4>
+            <p><strong>Animalito:</strong> #{{ (ticketResult()!.ticket as any).animalito?.number }} - {{ (ticketResult()!.ticket as any).animalito?.name }}</p>
+          </div>
+        }
+
+        @if (ticketResult()!.type === 'parley' && (ticketResult()!.ticket as any).legs) {
+          <div class="type-details">
+            <h4>Selecciones del Parley</h4>
+            @for (leg of (ticketResult()!.ticket as any).legs; track leg.id) {
+              <div class="parley-leg">
+                <p><strong>Selección:</strong> {{ leg.market?.name }}</p>
+                <p><strong>Cuota:</strong> {{ leg.odds }}</p>
+                <span class="badge" [class]="getStatusBadgeClass(leg.status)">
+                  {{ getStatusText(leg.status) }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

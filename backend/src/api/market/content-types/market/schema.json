@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "markets",
+  "info": {
+    "singularName": "market",
+    "pluralName": "markets",
+    "displayName": "Market",
+    "description": "Mercados de apuesta por partido (moneyline, spread, over/under, etc.)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "match": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::match.match",
+      "inversedBy": "markets"
+    },
+    "marketType": {
+      "type": "enumeration",
+      "enum": ["moneyline", "spread", "over_under", "both_teams_score", "correct_score"],
+      "required": true,
+      "description": "Tipo de mercado"
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "description": "Nombre del mercado (ej: Moneyline - Victoria Local)"
+    },
+    "selection": {
+      "type": "string",
+      "required": true,
+      "description": "Selección específica (ej: home, away, over, under)"
+    },
+    "odds": {
+      "type": "decimal",
+      "required": true,
+      "description": "Cuota/Odd del mercado (ej: 1.75, 2.50)"
+    },
+    "line": {
+      "type": "decimal",
+      "description": "Línea para spread u over/under (ej: +1.5, 2.5 goles)"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "result": {
+      "type": "enumeration",
+      "enum": ["pending", "won", "lost", "void"],
+      "default": "pending",
+      "description": "Resultado final del mercado"
+    }
+  }
+}

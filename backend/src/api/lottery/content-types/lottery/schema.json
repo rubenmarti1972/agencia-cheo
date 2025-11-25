@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lotteries",
+  "info": {
+    "singularName": "lottery",
+    "pluralName": "lotteries",
+    "displayName": "Lottery",
+    "description": "Loterías venezolanas (ej: Lotería del Zulia, Triple Zulia, etc.)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "minBetAmount": {
+      "type": "decimal",
+      "default": 1.0
+    },
+    "maxBetAmount": {
+      "type": "decimal",
+      "default": 1000.0
+    },
+    "payoutMultiplier": {
+      "type": "decimal",
+      "default": 70.0,
+      "description": "Factor de pago por número ganador (ej: 70x)"
+    },
+    "draws": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lottery-draw.lottery-draw",
+      "mappedBy": "lottery"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lottery_draws",
+  "info": {
+    "singularName": "lottery-draw",
+    "pluralName": "lottery-draws",
+    "displayName": "Lottery Draw",
+    "description": "Sorteos de lotería con fecha, hora y número ganador"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "lottery": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::lottery.lottery",
+      "inversedBy": "draws"
+    },
+    "drawDate": {
+      "type": "date",
+      "required": true
+    },
+    "drawTime": {
+      "type": "time",
+      "required": true,
+      "description": "Hora del sorteo (ej: 13:00, 19:00)"
+    },
+    "closeMinutesBefore": {
+      "type": "integer",
+      "default": 15,
+      "description": "Minutos antes de cerrar apuestas"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["open", "closed", "result_published"],
+      "default": "open",
+      "required": true
+    },
+    "winningNumber": {
+      "type": "string",
+      "description": "Número ganador (2-4 dígitos según la lotería)"
+    },
+    "bets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lottery-bet.lottery-bet",
+      "mappedBy": "draw"
+    }
+  }
+}

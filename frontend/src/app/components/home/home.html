@@ -1,0 +1,89 @@
+<div class="home">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content fade-in">
+        <h1>Bienvenido a <span class="text-accent">Agencia Cheo</span></h1>
+        <p class="hero-subtitle">
+          La mejor plataforma de apuestas en Venezuela. Loterías, Animalitos y Parley Deportivo.
+        </p>
+
+        <!-- Quick Actions -->
+        <div class="hero-actions">
+          <a routerLink="/loterias" class="btn btn-accent btn-lg">
+            Jugar Ahora
+          </a>
+          <a routerLink="/consultar-ticket" class="btn btn-outline btn-lg">
+            Consultar Ticket
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="categories">
+    <div class="container">
+      <h2 class="text-center mb-xl">¿Qué deseas jugar hoy?</h2>
+
+      <div class="categories-grid">
+        @for (category of categories; track category.route) {
+          <a [routerLink]="category.route" class="category-card">
+            <div class="category-icon">{{ category.icon }}</div>
+            <h3>{{ category.title }}</h3>
+            <p>{{ category.description }}</p>
+            <span class="category-link">
+              Jugar Ahora →
+            </span>
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <h2 class="text-center mb-xl">¿Por qué elegirnos?</h2>
+
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <div class="feature-icon">🔒</div>
+          <h4>Seguro y Confiable</h4>
+          <p>Todos tus tickets están protegidos y respaldados</p>
+        </div>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">⚡</div>
+          <h4>Rápido y Fácil</h4>
+          <p>Haz tus apuestas en segundos desde cualquier dispositivo</p>
+        </div>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">💰</div>
+          <h4>Mejores Pagos</h4>
+          <p>Ofrecemos las mejores cuotas del mercado venezolano</p>
+        </div>
+
+        <div class="feature-card fade-in">
+          <div class="feature-icon">📊</div>
+          <h4>Resultados en Tiempo Real</h4>
+          <p>Consulta los resultados de todos los sorteos al instante</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2>¿Listo para ganar?</h2>
+        <p>Comienza a jugar ahora y aprovecha las mejores cuotas</p>
+        <a routerLink="/loterias" class="btn btn-accent btn-lg">
+          Comenzar
+        </a>
+      </div>
+    </div>
+  </section>
+</div>

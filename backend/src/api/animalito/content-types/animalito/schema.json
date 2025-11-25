@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "animalitos",
+  "info": {
+    "singularName": "animalito",
+    "pluralName": "animalitos",
+    "displayName": "Animalito",
+    "description": "Catálogo fijo de 36 animalitos (1-36)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "number": {
+      "type": "integer",
+      "required": true,
+      "unique": true,
+      "min": 1,
+      "max": 36
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Nombre del animalito (ej: Delfín, Elefante, etc.)"
+    },
+    "imageUrl": {
+      "type": "string",
+      "description": "URL opcional de la imagen del animalito"
+    },
+    "bets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::animalitos-bet.animalitos-bet",
+      "mappedBy": "animalito"
+    }
+  }
+}

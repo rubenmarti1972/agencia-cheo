@@ -1,0 +1,60 @@
+{
+  "kind": "collectionType",
+  "collectionName": "parley_tickets",
+  "info": {
+    "singularName": "parley-ticket",
+    "pluralName": "parley-tickets",
+    "displayName": "Parley Ticket",
+    "description": "Tickets de parley con múltiples selecciones"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ticketCode": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Código único del ticket"
+    },
+    "betAmount": {
+      "type": "decimal",
+      "required": true,
+      "description": "Monto apostado"
+    },
+    "totalOdds": {
+      "type": "decimal",
+      "required": true,
+      "description": "Odd total (producto de todas las odds)"
+    },
+    "potentialWin": {
+      "type": "decimal",
+      "required": true,
+      "description": "Ganancia potencial = betAmount * totalOdds"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "won", "lost", "void"],
+      "default": "pending",
+      "required": true,
+      "description": "Estado del ticket"
+    },
+    "paidAmount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "userName": {
+      "type": "string"
+    },
+    "userPhone": {
+      "type": "string"
+    },
+    "legs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::parley-leg.parley-leg",
+      "mappedBy": "ticket"
+    }
+  }
+}

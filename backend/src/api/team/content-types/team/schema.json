@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "teams",
+  "info": {
+    "singularName": "team",
+    "pluralName": "teams",
+    "displayName": "Team",
+    "description": "Equipos asociados a cada deporte"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sport": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::sport.sport",
+      "inversedBy": "teams"
+    },
+    "name": {
+      "type": "string",
+      "required": true,
+      "description": "Nombre del equipo"
+    },
+    "shortName": {
+      "type": "string",
+      "description": "Nombre corto o abreviatura"
+    },
+    "logoUrl": {
+      "type": "string",
+      "description": "URL del logo del equipo"
+    },
+    "country": {
+      "type": "string"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "animalitos_draws",
+  "info": {
+    "singularName": "animalitos-draw",
+    "pluralName": "animalitos-draws",
+    "displayName": "Animalitos Draw",
+    "description": "Sorteos de animalitos por fecha y juego"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "game": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::animalitos-game.animalitos-game",
+      "inversedBy": "draws"
+    },
+    "drawDate": {
+      "type": "date",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["open", "closed", "result_published"],
+      "default": "open",
+      "required": true
+    },
+    "winningAnimalNumber": {
+      "type": "integer",
+      "min": 1,
+      "max": 36,
+      "description": "Número del animalito ganador (1-36)"
+    },
+    "bets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::animalitos-bet.animalitos-bet",
+      "mappedBy": "draw"
+    }
+  }
+}

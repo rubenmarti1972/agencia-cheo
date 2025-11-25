@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "matches",
+  "info": {
+    "singularName": "match",
+    "pluralName": "matches",
+    "displayName": "Match",
+    "description": "Partidos deportivos con fecha, equipos y resultado"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sport": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::sport.sport",
+      "inversedBy": "matches"
+    },
+    "homeTeam": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::team.team"
+    },
+    "awayTeam": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::team.team"
+    },
+    "matchDate": {
+      "type": "datetime",
+      "required": true,
+      "description": "Fecha y hora del partido"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["scheduled", "live", "finished", "cancelled"],
+      "default": "scheduled",
+      "required": true
+    },
+    "homeScore": {
+      "type": "integer",
+      "default": 0
+    },
+    "awayScore": {
+      "type": "integer",
+      "default": 0
+    },
+    "venue": {
+      "type": "string",
+      "description": "Lugar del partido"
+    },
+    "markets": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::market.market",
+      "mappedBy": "match"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+<header class="header">
+  <div class="container">
+    <nav class="nav">
+      <!-- Logo -->
+      <a routerLink="/" class="logo">
+        <span class="logo-text">AGENCIA</span>
+        <span class="logo-accent">CHEO</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <ul class="nav-links">
+        <li>
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            Inicio
+          </a>
+        </li>
+        <li>
+          <a routerLink="/loterias" routerLinkActive="active">
+            Loterías
+          </a>
+        </li>
+        <li>
+          <a routerLink="/animalitos" routerLinkActive="active">
+            Animalitos
+          </a>
+        </li>
+        <li>
+          <a routerLink="/parley" routerLinkActive="active">
+            Parley Deportivo
+          </a>
+        </li>
+        <li>
+          <a routerLink="/resultados" routerLinkActive="active">
+            Resultados
+          </a>
+        </li>
+        <li>
+          <a routerLink="/consultar-ticket" routerLinkActive="active" class="btn-ticket">
+            Consultar Ticket
+          </a>
+        </li>
+      </ul>
+
+      <!-- Mobile Menu Button -->
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+        <span class="hamburger" [class.open]="mobileMenuOpen"></span>
+      </button>
+    </nav>
+
+    <!-- Mobile Navigation -->
+    @if (mobileMenuOpen) {
+      <div class="mobile-nav" (click)="closeMobileMenu()">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          Inicio
+        </a>
+        <a routerLink="/loterias" routerLinkActive="active">
+          Loterías
+        </a>
+        <a routerLink="/animalitos" routerLinkActive="active">
+          Animalitos
+        </a>
+        <a routerLink="/parley" routerLinkActive="active">
+          Parley Deportivo
+        </a>
+        <a routerLink="/resultados" routerLinkActive="active">
+          Resultados
+        </a>
+        <a routerLink="/consultar-ticket" routerLinkActive="active" class="btn-accent">
+          Consultar Ticket
+        </a>
+      </div>
+    }
+  </div>
+</header>

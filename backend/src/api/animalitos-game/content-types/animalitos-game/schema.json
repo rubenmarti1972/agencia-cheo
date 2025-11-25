@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "animalitos_games",
+  "info": {
+    "singularName": "animalitos-game",
+    "pluralName": "animalitos-games",
+    "displayName": "Animalitos Game",
+    "description": "Juegos/horarios de animalitos (ej: 9am, 12pm, 4pm, 7pm)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Nombre del juego (ej: Animalitos 12pm)"
+    },
+    "scheduledTime": {
+      "type": "time",
+      "required": true,
+      "description": "Hora programada del sorteo"
+    },
+    "closeMinutesBefore": {
+      "type": "integer",
+      "default": 5,
+      "description": "Minutos antes de cerrar apuestas"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "payoutMultiplier": {
+      "type": "decimal",
+      "default": 30.0,
+      "description": "Factor de pago por animalito ganador"
+    },
+    "minBetAmount": {
+      "type": "decimal",
+      "default": 1.0
+    },
+    "maxBetAmount": {
+      "type": "decimal",
+      "default": 500.0
+    },
+    "draws": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::animalitos-draw.animalitos-draw",
+      "mappedBy": "game"
+    }
+  }
+}

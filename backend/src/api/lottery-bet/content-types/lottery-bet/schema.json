@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lottery_bets",
+  "info": {
+    "singularName": "lottery-bet",
+    "pluralName": "lottery-bets",
+    "displayName": "Lottery Bet",
+    "description": "Apuestas a números de lotería"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "draw": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::lottery-draw.lottery-draw",
+      "inversedBy": "bets"
+    },
+    "ticketCode": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Código único del ticket (generado en backend)"
+    },
+    "betNumber": {
+      "type": "string",
+      "required": true,
+      "description": "Número apostado (2-4 dígitos)"
+    },
+    "betAmount": {
+      "type": "decimal",
+      "required": true
+    },
+    "potentialWin": {
+      "type": "decimal",
+      "required": true,
+      "description": "Ganancia potencial = betAmount * payoutMultiplier"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "won", "lost"],
+      "default": "pending",
+      "required": true
+    },
+    "paidAmount": {
+      "type": "decimal",
+      "default": 0,
+      "description": "Monto pagado si ganó"
+    },
+    "userName": {
+      "type": "string",
+      "description": "Nombre opcional del apostador"
+    },
+    "userPhone": {
+      "type": "string",
+      "description": "Teléfono opcional del apostador"
+    }
+  }
+}
