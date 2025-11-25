@@ -1,6 +1,6 @@
-import { factories } from '@strapi/strapi';
 
-export default factories.createCoreController('api::lottery-bet.lottery-bet', () => ({
+
+export default {
   /**
    * Endpoint unificado para consultar un ticket por código
    * GET /api/ticket/:ticketCode
@@ -125,4 +125,4 @@ export default factories.createCoreController('api::lottery-bet.lottery-bet', ()
       return ctx.internalServerError('Error searching for ticket');
     }
   }
-}));
+};

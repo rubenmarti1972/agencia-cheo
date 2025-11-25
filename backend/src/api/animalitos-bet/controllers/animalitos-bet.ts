@@ -1,9 +1,6 @@
-import { factories } from '@strapi/strapi';
 import crypto from 'crypto';
 
-import { ANIMALITOS_BET_UID } from '../constants';
-
-export default factories.createCoreController(ANIMALITOS_BET_UID, () => ({
+export default {
   /**
    * POST /api/animalitos/place-bet
    *
@@ -128,4 +125,4 @@ export default factories.createCoreController(ANIMALITOS_BET_UID, () => ({
       return ctx.internalServerError('Error placing bet');
     }
   }
-}));
+};
