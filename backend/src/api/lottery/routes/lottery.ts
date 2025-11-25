@@ -6,6 +6,8 @@ export default {
       handler: 'lottery.placeBet',
       config: {
         auth: false,
+        policies: [],
+        middlewares: [],
       },
     },
   ],

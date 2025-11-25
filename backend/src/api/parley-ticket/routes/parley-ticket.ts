@@ -6,6 +6,8 @@ export default {
       handler: 'parley-ticket.placeTicket',
       config: {
         auth: false,
+        policies: [],
+        middlewares: [],
       },
     },
   ],
