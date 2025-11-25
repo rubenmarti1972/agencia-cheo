@@ -3,14 +3,12 @@
  * Proporciona endpoints para consultar resultados del día
  */
 
-import type { Core } from '@strapi/strapi';
-
 export default {
   /**
    * GET /api/results/today
    * Retorna todos los resultados del día actual
    */
-  async getToday(ctx: Core.Context) {
+  async getToday(ctx: any) {
     try {
       const today = new Date().toISOString().split('T')[0];
 
@@ -25,6 +23,11 @@ export default {
           populate: ['game']
         }
       );
+      const animalitosList = (Array.isArray(animalitosDraws)
+        ? animalitosDraws
+        : animalitosDraws
+          ? [animalitosDraws]
+          : []) as any[];
 
       // Buscar resultados de loterías del día
       const lotteryDraws = await strapi.entityService.findMany(
@@ -37,9 +40,10 @@ export default {
           populate: ['lottery']
         }
       );
+      const lotteriesList = (Array.isArray(lotteryDraws) ? lotteryDraws : lotteryDraws ? [lotteryDraws] : []) as any[];
 
       // Formatear resultados de animalitos
-      const animalitos = animalitosDraws.map((draw: {
+      const animalitos = animalitosList.map((draw: {
         id: number;
         game?: { name: string };
         winningAnimalNumber: number;
@@ -52,7 +56,7 @@ export default {
       }));
 
       // Formatear resultados de loterías
-      const loterias = lotteryDraws.map((draw: {
+      const loterias = lotteriesList.map((draw: {
         id: number;
         lottery?: { name: string };
         winningNumber: string;
@@ -79,7 +83,7 @@ export default {
    * GET /api/results/date/:date
    * Retorna todos los resultados de una fecha específica
    */
-  async getByDate(ctx: Core.Context) {
+  async getByDate(ctx: any) {
     try {
       const { date } = ctx.params;
 
@@ -99,6 +103,11 @@ export default {
           populate: ['game']
         }
       );
+      const animalitosList = (Array.isArray(animalitosDraws)
+        ? animalitosDraws
+        : animalitosDraws
+          ? [animalitosDraws]
+          : []) as any[];
 
       // Buscar resultados de loterías
       const lotteryDraws = await strapi.entityService.findMany(
@@ -111,9 +120,10 @@ export default {
           populate: ['lottery']
         }
       );
+      const lotteriesList = (Array.isArray(lotteryDraws) ? lotteryDraws : lotteryDraws ? [lotteryDraws] : []) as any[];
 
       // Formatear resultados
-      const animalitos = animalitosDraws.map((draw: {
+      const animalitos = animalitosList.map((draw: {
         id: number;
         game?: { name: string };
         winningAnimalNumber: number;
@@ -125,7 +135,7 @@ export default {
         time: draw.createdAt
       }));
 
-      const loterias = lotteryDraws.map((draw: {
+      const loterias = lotteriesList.map((draw: {
         id: number;
         lottery?: { name: string };
         winningNumber: string;
@@ -152,7 +162,7 @@ export default {
    * Ejecuta el scraping manualmente (útil para testing)
    * NOTA: En producción, se debe proteger con autenticación
    */
-  async scrapeNow(ctx: Core.Context) {
+  async scrapeNow(ctx: any) {
     try {
       const { getResultsService } = await import('../../../services');
       const resultsService = getResultsService(strapi);
@@ -174,7 +184,7 @@ export default {
    * GET /api/results/cron-status
    * Obtiene el estado de los cron jobs
    */
-  async getCronStatus(ctx: Core.Context) {
+  async getCronStatus(ctx: any) {
     try {
       const { scheduler } = await import('../../../cron/scheduler');
 
