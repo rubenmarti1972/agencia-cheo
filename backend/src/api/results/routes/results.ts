@@ -3,11 +3,12 @@
  */
 
 export default {
+  contentType: 'api::lottery-draw.lottery-draw',
   routes: [
     {
       method: 'GET',
       path: '/results/today',
-      handler: 'results.getToday',
+      handler: 'api::results.results.getToday',
       info: {
         contentType: 'api::lottery-draw.lottery-draw',
       },
@@ -20,7 +21,7 @@ export default {
     {
       method: 'GET',
       path: '/results/date/:date',
-      handler: 'results.getByDate',
+      handler: 'api::results.results.getByDate',
       info: {
         contentType: 'api::lottery-draw.lottery-draw',
       },
@@ -33,7 +34,7 @@ export default {
     {
       method: 'POST',
       path: '/results/scrape',
-      handler: 'results.scrapeNow',
+      handler: 'api::results.results.scrapeNow',
       info: {
         contentType: 'api::lottery-draw.lottery-draw',
       },
@@ -46,7 +47,7 @@ export default {
     {
       method: 'GET',
       path: '/results/cron-status',
-      handler: 'results.getCronStatus',
+      handler: 'api::results.results.getCronStatus',
       info: {
         contentType: 'api::lottery-draw.lottery-draw',
       },
