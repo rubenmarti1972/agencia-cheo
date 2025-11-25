@@ -1,7 +1,9 @@
 import { factories } from '@strapi/strapi';
 import crypto from 'crypto';
 
-export default factories.createCoreController('api::animalitos-bet.animalitos-bet', () => ({
+const uid = 'api::animalitos-bet.animalitos-bet';
+
+export default factories.createCoreController(uid, () => ({
   /**
    * POST /api/animalitos/place-bet
    *
@@ -79,12 +81,13 @@ export default factories.createCoreController('api::animalitos-bet.animalitos-be
       const animalitos = await strapi.entityService.findMany('api::animalito.animalito', {
         filters: { number: animalitoNumber }
       });
+      const animalitosList = Array.isArray(animalitos) ? animalitos : animalitos ? [animalitos] : [];
 
-      if (animalitos.length === 0) {
+      if (animalitosList.length === 0) {
         return ctx.notFound('Animalito not found');
       }
 
-      const animalito = animalitos[0];
+      const animalito = animalitosList[0];
 
       // Generar código único de ticket
       const ticketCode = `ANI-${Date.now()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
