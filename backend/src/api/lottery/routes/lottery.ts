@@ -3,9 +3,15 @@ export default {
     {
       method: 'POST',
       path: '/loterias/place-bet',
-      handler: 'lottery.placeBet',
+      handler: 'api::lottery.lottery.placeBet',
+      info: {
+        // Opcional, pero permitido: esto NO rompe nada
+        contentType: 'api::lottery.lottery',
+      },
       config: {
         auth: false,
+        policies: [],
+        middlewares: [],
       },
     },
   ],
