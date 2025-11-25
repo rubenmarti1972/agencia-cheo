@@ -2,6 +2,8 @@ import { Page } from 'playwright';
 import { BaseScraper, ScrapeResult } from './base.scraper';
 import { logger } from '../utils/logger';
 
+declare const document: any;
+
 export interface LotteryResult {
   lotteryName: string;
   winningNumber: string;
@@ -46,7 +48,7 @@ export class LotteryScraper extends BaseScraper<LotteryResult[]> {
         );
         const extracted: { lottery: string; number: string; time: string }[] = [];
 
-        rows.forEach((row: Element) => {
+        rows.forEach((row: any) => {
           // Intentar diferentes estructuras de HTML comunes
           const lotteryEl = row.querySelector(
             '.lottery-name, .nombre-loteria, [data-lottery-name], h3, h4'

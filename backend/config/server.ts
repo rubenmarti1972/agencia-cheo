@@ -1,4 +1,11 @@
-export default ({ env }: { env: (key: string, defaultValue?: string) => string }) => ({
+type StrapiEnv = {
+  (key: string, defaultValue?: string): string;
+  int: (key: string, defaultValue?: number) => number;
+  bool: (key: string, defaultValue?: boolean) => boolean;
+  array: (key: string, defaultValue?: string[]) => string[];
+};
+
+export default ({ env }: { env: StrapiEnv }) => ({
   host: env('HOST', '0.0.0.0'),
   port: env.int('PORT', 1337),
   app: {
