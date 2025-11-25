@@ -1,7 +1,8 @@
 // @ts-nocheck
 import crypto from 'crypto';
+import { factories } from '@strapi/strapi';
 
-export default {
+export default factories.createCoreController('api::lottery.lottery', ({ strapi }) => ({
   /**
    * POST /api/loterias/place-bet
    *
@@ -28,9 +29,13 @@ export default {
 
     try {
       // Obtener el sorteo con su lotería
-      const draw = await strapi.entityService.findOne('api::lottery-draw.lottery-draw', drawId, {
-        populate: ['lottery']
-      });
+      const draw = await strapi.entityService.findOne(
+        'api::lottery-draw.lottery-draw',
+        drawId,
+        {
+          populate: ['lottery'],
+        }
+      );
 
       if (!draw) {
         return ctx.notFound('Draw not found');
@@ -55,7 +60,9 @@ export default {
 
       // Validar hora de cierre
       const drawDateTime = new Date(`${draw.drawDate}T${draw.drawTime}`);
-      const closeTime = new Date(drawDateTime.getTime() - draw.closeMinutesBefore * 60000);
+      const closeTime = new Date(
+        drawDateTime.getTime() - draw.closeMinutesBefore * 60000
+      );
       const now = new Date();
 
       if (now >= closeTime) {
@@ -64,49 +71,65 @@ export default {
 
       // Validar montos mínimo y máximo
       if (betAmount < lottery.minBetAmount) {
-        return ctx.badRequest(`Minimum bet amount is ${lottery.minBetAmount}`);
+        return ctx.badRequest(
+          `Minimum bet amount is ${lottery.minBetAmount}`
+        );
       }
 
       if (betAmount > lottery.maxBetAmount) {
-        return ctx.badRequest(`Maximum bet amount is ${lottery.maxBetAmount}`);
+        return ctx.badRequest(
+          `Maximum bet amount is ${lottery.maxBetAmount}`
+        );
       }
 
       // Generar código único de ticket
-      const ticketCode = `LOT-${Date.now()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+      const ticketCode = `LOT-${Date.now()}-${crypto
+        .randomBytes(4)
+        .toString('hex')
+        .toUpperCase()}`;
 
       // Calcular ganancia potencial
       const potentialWin = betAmount * lottery.payoutMultiplier;
 
       // Crear la apuesta
-      const bet = await strapi.entityService.create('api::lottery-bet.lottery-bet', {
-        data: {
-          draw: drawId,
-          ticketCode,
-          betNumber,
-          betAmount,
-          potentialWin,
-          status: 'pending',
-          userName,
-          userPhone,
-          paidAmount: 0
+      const bet = await strapi.entityService.create(
+        'api::lottery-bet.lottery-bet',
+        {
+          data: {
+            draw: drawId,
+            ticketCode,
+            betNumber,
+            betAmount,
+            potentialWin,
+            status: 'pending',
+            userName,
+            userPhone,
+            paidAmount: 0,
+          },
         }
-      });
+      );
+
+      const betWithRelations = await strapi.entityService.findOne(
+        'api::lottery-bet.lottery-bet',
+        bet.id,
+        {
+          populate: {
+            draw: {
+              populate: ['lottery'],
+            },
+          },
+        }
+      );
 
       return ctx.send({
         data: {
           ticketCode,
-          bet: await strapi.entityService.findOne('api::lottery-bet.lottery-bet', bet.id, {
-            populate: {
-              draw: {
-                populate: ['lottery']
-              }
-            }
-          })
-        }
+          bet: betWithRelations,
+        },
       });
     } catch (error) {
       strapi.log.error('Error placing lottery bet:', error);
       return ctx.internalServerError('Error placing bet');
     }
-  }
-};
+  },
+}));

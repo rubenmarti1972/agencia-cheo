@@ -1,16 +1,3 @@
-// backend/src/api/lottery/routes/lottery.ts
+import { factories } from '@strapi/strapi';
 
-export default {
-  routes: [
-    {
-      method: 'POST',
-      path: '/loterias/place-bet',
-      handler: 'lottery.placeBet',
-      config: {
-        auth: false,
-        policies: [],
-        middlewares: [],
-      },
-    },
-  ],
-};
+export default factories.createCoreRouter('api::lottery.lottery');
