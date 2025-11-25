@@ -5,8 +5,9 @@
   "scripts": {
     "develop": "strapi develop",
     "start": "strapi start",
-    "build": "strapi build",
-    "strapi": "strapi"
+    "build": "strapi build && ./copy-schemas.sh",
+    "strapi": "strapi",
+    "postbuild": "./copy-schemas.sh"
   },
   "keywords": [],
   "author": "",
