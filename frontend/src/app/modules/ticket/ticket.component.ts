@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DecimalPipe } from '@angular/common';
 import { TicketService } from '../../services';
-import { TicketLookupResponse } from '../../models';
+import { TicketLookupResponse, LotteryBet, AnimalitosBet, ParleyTicket } from '../../models';
 
 @Component({
   selector: 'app-ticket',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DecimalPipe],
   templateUrl: './ticket.component.html',
   styleUrl: './ticket.component.scss'
 })
@@ -74,5 +75,33 @@ export class TicketComponent {
       default:
         return status.toUpperCase();
     }
+  }
+
+  // Helper methods para acceder a propiedades específicas de cada tipo
+  isLotteryTicket(): boolean {
+    return this.ticketResult()?.type === 'lottery';
+  }
+
+  isAnimalitosTicket(): boolean {
+    return this.ticketResult()?.type === 'animalitos';
+  }
+
+  isParleyTicket(): boolean {
+    return this.ticketResult()?.type === 'parley';
+  }
+
+  getLotteryBet(): LotteryBet | null {
+    const result = this.ticketResult();
+    return result?.type === 'lottery' ? (result.ticket as LotteryBet) : null;
+  }
+
+  getAnimalitosBet(): AnimalitosBet | null {
+    const result = this.ticketResult();
+    return result?.type === 'animalitos' ? (result.ticket as AnimalitosBet) : null;
+  }
+
+  getParleyTicket(): ParleyTicket | null {
+    const result = this.ticketResult();
+    return result?.type === 'parley' ? (result.ticket as ParleyTicket) : null;
   }
 }
