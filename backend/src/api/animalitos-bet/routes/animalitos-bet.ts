@@ -3,7 +3,7 @@ export default {
     {
       method: 'POST',
       path: '/animalitos/place-bet',
-      handler: 'animalitos-bet.placeBet',
+      handler: 'api::animalitos-bet.animalitos-bet.placeBet',
       config: {
         auth: false,
       },

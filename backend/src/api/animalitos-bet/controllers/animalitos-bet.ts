@@ -1,7 +1,9 @@
 import { factories } from '@strapi/strapi';
 import crypto from 'crypto';
 
-export default factories.createCoreController('api::animalitos-bet.animalitos-bet', () => ({
+const uid = 'api::animalitos-bet.animalitos-bet';
+
+export default factories.createCoreController(uid, () => ({
   /**
    * POST /api/animalitos/place-bet
    *
