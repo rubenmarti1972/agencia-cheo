@@ -2,6 +2,8 @@ import { Page } from 'playwright';
 import { BaseScraper, ScrapeResult } from './base.scraper';
 import { logger } from '../utils/logger';
 
+declare const document: any;
+
 export interface AnimalitoResult {
   gameName: string;
   winningNumber: number;
@@ -40,7 +42,7 @@ export class AnimalitosScraper extends BaseScraper<AnimalitoResult[]> {
         const rows = document.querySelectorAll('.resultado-animalito, .result-row, [data-game]');
         const extracted: { game: string; number: string; time: string }[] = [];
 
-        rows.forEach((row: Element) => {
+        rows.forEach((row: any) => {
           // Intentar diferentes estructuras comunes
           const gameEl = row.querySelector('.game-name, .nombre-juego, [data-game-name]');
           const numberEl = row.querySelector('.winning-number, .numero-ganador, [data-number]');
