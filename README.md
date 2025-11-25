@@ -223,6 +223,13 @@ DATABASE_SSL=false
 # DATABASE_URL=postgres://agencia_user:change_me@127.0.0.1:5432/agencia_cheo
 ```
 
+> Crea la base de datos y usuario en PostgreSQL antes de iniciar Strapi. Ejemplo rápido:
+>
+> ```bash
+> createdb -U postgres agencia_cheo
+> # O usa psql para crear usuario/clave si no existe
+> ```
+
 ### 4. Ejecutar Backend
 
 ```bash
