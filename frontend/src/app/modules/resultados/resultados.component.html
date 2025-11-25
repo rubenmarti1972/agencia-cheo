@@ -1,0 +1,191 @@
+<div class="resultados-page">
+  <div class="container">
+    <!-- Header -->
+    <div class="page-header">
+      <h1>📊 Resultados</h1>
+      <p>Consulta los resultados de loterías, animalitos y partidos deportivos</p>
+    </div>
+
+    <!-- Date Filter -->
+    <div class="filters-section card">
+      <form [formGroup]="filterForm" class="filter-form">
+        <div class="form-group">
+          <label for="date">📅 Fecha:</label>
+          <input type="date" id="date" formControlName="date" [max]="getTodayDate()" />
+        </div>
+      </form>
+
+      <!-- Type Filter Tabs -->
+      <div class="filter-tabs">
+        <button
+          class="tab-btn"
+          [class.active]="activeFilter() === 'all'"
+          (click)="setFilter('all')"
+        >
+          Todos
+        </button>
+        <button
+          class="tab-btn"
+          [class.active]="activeFilter() === 'loterias'"
+          (click)="setFilter('loterias')"
+        >
+          🎟️ Loterías
+        </button>
+        <button
+          class="tab-btn"
+          [class.active]="activeFilter() === 'animalitos'"
+          (click)="setFilter('animalitos')"
+        >
+          🐾 Animalitos
+        </button>
+        <button
+          class="tab-btn"
+          [class.active]="activeFilter() === 'partidos'"
+          (click)="setFilter('partidos')"
+        >
+          ⚽ Partidos
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="loading-card card">
+        <p class="text-center">Cargando resultados...</p>
+      </div>
+    }
+
+    <!-- Error Message -->
+    @if (error()) {
+      <div class="error-card card">
+        <p>{{ error() }}</p>
+        <button class="btn btn-primary btn-sm" (click)="loadResults()">Reintentar</button>
+      </div>
+    }
+
+    <!-- Results Sections -->
+    @if (!loading() && !error()) {
+      <div class="results-container">
+        <!-- Lottery Results -->
+        @if (shouldShowLotteries()) {
+          <div class="results-section">
+            <h2>🎟️ Resultados de Loterías</h2>
+            @if (lotteryResults().length > 0) {
+              <div class="results-grid">
+                @for (draw of lotteryResults(); track draw.id) {
+                  <div class="result-card card">
+                    <div class="result-header">
+                      <h3>{{ draw.lottery?.name }}</h3>
+                      <span class="badge badge-success">Finalizado</span>
+                    </div>
+                    <div class="result-body">
+                      <div class="winning-number">
+                        <span class="label">Número Ganador:</span>
+                        <span class="number lottery-number">{{ draw.winningNumber }}</span>
+                      </div>
+                      <div class="result-details">
+                        <div class="detail-item">
+                          <span>📅 Fecha:</span>
+                          <strong>{{ draw.drawDate | date:'dd/MM/yyyy' }}</strong>
+                        </div>
+                        <div class="detail-item">
+                          <span>🕐 Hora:</span>
+                          <strong>{{ formatTime(draw.drawTime) }}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="empty-state card">
+                <p>No hay resultados de loterías para esta fecha</p>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Animalitos Results -->
+        @if (shouldShowAnimalitos()) {
+          <div class="results-section">
+            <h2>🐾 Resultados de Animalitos</h2>
+            @if (animalitosResults().length > 0) {
+              <div class="results-grid">
+                @for (draw of animalitosResults(); track draw.id) {
+                  <div class="result-card card">
+                    <div class="result-header">
+                      <h3>{{ getAnimalitosGameName(draw) }}</h3>
+                      <span class="badge badge-success">Finalizado</span>
+                    </div>
+                    <div class="result-body">
+                      <div class="winning-number">
+                        <span class="label">Animalito Ganador:</span>
+                        <span class="number animalito-number">{{ draw.winningAnimalNumber }}</span>
+                      </div>
+                      <div class="result-details">
+                        <div class="detail-item">
+                          <span>📅 Fecha:</span>
+                          <strong>{{ draw.drawDate | date:'dd/MM/yyyy' }}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="empty-state card">
+                <p>No hay resultados de animalitos para esta fecha</p>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Match Results -->
+        @if (shouldShowMatches()) {
+          <div class="results-section">
+            <h2>⚽ Resultados de Partidos</h2>
+            @if (matchResults().length > 0) {
+              <div class="results-grid">
+                @for (match of matchResults(); track match.id) {
+                  <div class="result-card card match-card">
+                    <div class="result-header">
+                      <span class="sport-badge">{{ match.sport?.name }}</span>
+                      <span class="badge badge-info">Finalizado</span>
+                    </div>
+                    <div class="match-result">
+                      <div class="team home-team">
+                        <span class="team-name">{{ match.homeTeam?.name }}</span>
+                        <span class="score">{{ match.homeScore }}</span>
+                      </div>
+                      <div class="vs">VS</div>
+                      <div class="team away-team">
+                        <span class="score">{{ match.awayScore }}</span>
+                        <span class="team-name">{{ match.awayTeam?.name }}</span>
+                      </div>
+                    </div>
+                    <div class="result-details">
+                      <div class="detail-item">
+                        <span>📅 Fecha:</span>
+                        <strong>{{ formatMatchDate(match.matchDate) }}</strong>
+                      </div>
+                      @if (match.venue) {
+                        <div class="detail-item">
+                          <span>🏟️ Estadio:</span>
+                          <strong>{{ match.venue }}</strong>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="empty-state card">
+                <p>No hay resultados de partidos para esta fecha</p>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

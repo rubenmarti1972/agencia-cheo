@@ -1,0 +1,242 @@
+.parley-page {
+  min-height: calc(100vh - 80px);
+  padding: var(--spacing-2xl) 0;
+  background: var(--color-background);
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+
+  h1 {
+    margin-bottom: var(--spacing-sm);
+  }
+}
+
+.loading-card,
+.error-card,
+.empty-state {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.error-card {
+  background: var(--color-error);
+  color: white;
+}
+
+.success-card {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--spacing-2xl);
+  text-align: center;
+  border: 2px solid var(--color-success);
+
+  .success-icon {
+    font-size: 4rem;
+  }
+
+  .ticket-info .ticket-code {
+    font-size: var(--font-size-2xl);
+    font-weight: bold;
+    color: var(--color-primary);
+    font-family: monospace;
+  }
+
+  .ticket-details {
+    margin: var(--spacing-xl) 0;
+
+    .detail {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--spacing-sm) 0;
+      border-bottom: 1px solid var(--color-border);
+
+      &.highlight {
+        background: var(--color-primary-50);
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+        border: none;
+      }
+    }
+  }
+
+  .success-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+  }
+}
+
+.parley-builder {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-xl);
+
+  @media (max-width: 968px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.matches-section h2 {
+  margin-bottom: var(--spacing-lg);
+}
+
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.match-card {
+  .match-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+
+    .sport-badge {
+      background: var(--color-secondary);
+      color: white;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-xs);
+      font-weight: bold;
+    }
+
+    .match-date {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+    }
+  }
+
+  .match-teams {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+
+    .team {
+      flex: 1;
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .vs {
+      color: var(--color-text-secondary);
+      font-weight: bold;
+    }
+  }
+
+  .markets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+
+    .market-btn {
+      display: flex;
+      flex-direction: column;
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--color-background);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+
+      &:hover {
+        border-color: var(--color-primary);
+      }
+
+      &.selected {
+        background: var(--color-primary);
+        border-color: var(--color-primary);
+        color: white;
+
+        .market-odds {
+          color: var(--color-accent);
+        }
+      }
+
+      .market-name {
+        font-size: var(--font-size-sm);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .market-odds {
+        font-weight: bold;
+        font-size: var(--font-size-lg);
+      }
+    }
+  }
+}
+
+.bet-slip {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+
+  h3 {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .selections {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: var(--spacing-lg);
+
+    .selection-item {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--spacing-sm);
+      margin-bottom: var(--spacing-sm);
+      background: var(--color-background);
+      border-radius: var(--radius-md);
+
+      .selection-info {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs);
+
+        small {
+          color: var(--color-text-secondary);
+        }
+      }
+
+      .selection-odds {
+        font-weight: bold;
+        color: var(--color-primary);
+      }
+    }
+  }
+
+  .odds-summary {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    background: var(--color-primary-50);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-lg);
+
+    strong {
+      font-size: var(--font-size-xl);
+    }
+  }
+
+  .potential-win {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-surface) 100%);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-accent);
+    margin-bottom: var(--spacing-lg);
+
+    strong {
+      font-size: var(--font-size-2xl);
+    }
+  }
+
+  button[type="submit"] {
+    width: 100%;
+  }
+}

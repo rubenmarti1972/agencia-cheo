@@ -96,4 +96,17 @@ export class ParleyService extends ApiService {
       `/matches?filters[status][$in][0]=scheduled&filters[status][$in][1]=live&filters[matchDate][$gte]=${today}&populate[homeTeam]=*&populate[awayTeam]=*&populate[sport]=*&sort=matchDate:asc&pagination[limit]=20`
     );
   }
+
+  /**
+   * Obtener resultados de partidos finalizados
+   */
+  getFinishedMatches(date?: string): Observable<StrapiCollectionResponse<Match>> {
+    let endpoint = '/matches?filters[status]=finished&populate[homeTeam]=*&populate[awayTeam]=*&populate[sport]=*&sort=matchDate:desc';
+
+    if (date) {
+      endpoint += `&filters[matchDate]=${date}`;
+    }
+
+    return this.get<StrapiCollectionResponse<Match>>(endpoint);
+  }
 }
