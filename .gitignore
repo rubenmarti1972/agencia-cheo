@@ -28,7 +28,6 @@ Thumbs.db
 *~
 
 # Strapi
-backend/database/*.db
 backend/.strapi/
 backend/.strapi-updater.json
 backend/exports/

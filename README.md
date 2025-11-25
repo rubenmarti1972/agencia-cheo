@@ -23,7 +23,7 @@ Plataforma moderna de apuestas para Venezuela con **Angular 20** y **Strapi 5.30
 ### Backend (Strapi 5.30.1)
 - **Node.js**: 20.19.5
 - **TypeScript**: 5.9.3
-- **SQLite**: Base de datos por defecto
+- **PostgreSQL**: Base de datos por defecto
 - Content types personalizados
 - Controladores y rutas custom
 - Validaciones de negocio
@@ -85,7 +85,6 @@ agencia-cheo/
     │   ├── server.ts
     │   ├── database.ts
     │   └── admin.ts
-    ├── database/                # SQLite DB
     ├── .env
     ├── package.json
     └── tsconfig.json
@@ -185,7 +184,7 @@ npm install
 
 ### 3. Configurar Backend
 
-Edita `backend/.env`:
+Edita `backend/.env` (PostgreSQL):
 
 ```env
 HOST=0.0.0.0
@@ -197,8 +196,20 @@ ADMIN_JWT_SECRET=your-admin-jwt-secret
 TRANSFER_TOKEN_SALT=your-transfer-token-salt
 JWT_SECRET=your-jwt-secret
 
-DATABASE_FILENAME=data.db
+DATABASE_HOST=127.0.0.1
+DATABASE_PORT=5432
+DATABASE_NAME=agencia_cheo
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_SSL=false
 ```
+
+> Crea la base de datos y usuario en PostgreSQL antes de iniciar Strapi. Ejemplo rápido:
+>
+> ```bash
+> createdb -U postgres agencia_cheo
+> # O usa psql para crear usuario/clave si no existe
+> ```
 
 ### 4. Ejecutar Backend
 
