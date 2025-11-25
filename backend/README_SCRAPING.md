@@ -211,9 +211,13 @@ ADMIN_JWT_SECRET=<generar>
 TRANSFER_TOKEN_SALT=<generar>
 JWT_SECRET=<generar>
 
-# Database
-DATABASE_CLIENT=sqlite  # O postgres en producción
-DATABASE_FILENAME=.tmp/data.db
+# Database (PostgreSQL)
+DATABASE_HOST=127.0.0.1
+DATABASE_PORT=5432
+DATABASE_NAME=agencia_cheo
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_SSL=false
 
 # Cron
 NODE_ENV=production  # Auto-activa cron

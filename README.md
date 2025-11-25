@@ -23,7 +23,7 @@ Plataforma moderna de apuestas para Venezuela con **Angular 20** y **Strapi 5.30
 ### Backend (Strapi 5.30.1)
 - **Node.js**: 20.19.5
 - **TypeScript**: 5.9.3
-- **SQLite**: Base de datos por defecto
+- **PostgreSQL**: Base de datos por defecto
 - Content types personalizados
 - Controladores y rutas custom
 - Validaciones de negocio
@@ -85,7 +85,6 @@ agencia-cheo/
     │   ├── server.ts
     │   ├── database.ts
     │   └── admin.ts
-    ├── database/                # SQLite DB
     ├── .env
     ├── package.json
     └── tsconfig.json
@@ -168,6 +167,7 @@ agencia-cheo/
 ### Requisitos Previos
 - Node.js 20.19.5
 - npm 6+
+- PostgreSQL 14+ en tu máquina local o en un servidor accesible
 
 ### 1. Instalar Frontend
 
@@ -185,7 +185,23 @@ npm install
 
 ### 3. Configurar Backend
 
-Edita `backend/.env`:
+Primero asegúrate de tener un servidor PostgreSQL corriendo y crea la base de datos (evita el error `database "agencia_cheo" does not exist`). Con un usuario superadmin de Postgres ejecuta:
+
+```bash
+# Crea base de datos y usuario dedicado
+createdb -U postgres agencia_cheo
+psql -U postgres -d postgres <<'SQL'
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'agencia_user') THEN
+    CREATE ROLE agencia_user LOGIN PASSWORD 'change_me';
+  END IF;
+END$$;
+GRANT ALL PRIVILEGES ON DATABASE agencia_cheo TO agencia_user;
+SQL
+```
+
+Edita `backend/.env` (PostgreSQL):
 
 ```env
 HOST=0.0.0.0
@@ -197,7 +213,14 @@ ADMIN_JWT_SECRET=your-admin-jwt-secret
 TRANSFER_TOKEN_SALT=your-transfer-token-salt
 JWT_SECRET=your-jwt-secret
 
-DATABASE_FILENAME=data.db
+DATABASE_HOST=127.0.0.1
+DATABASE_PORT=5432
+DATABASE_NAME=agencia_cheo
+DATABASE_USERNAME=agencia_user
+DATABASE_PASSWORD=change_me
+DATABASE_SSL=false
+# Si prefieres, puedes usar una sola URL:
+# DATABASE_URL=postgres://agencia_user:change_me@127.0.0.1:5432/agencia_cheo
 ```
 
 ### 4. Ejecutar Backend
@@ -205,6 +228,8 @@ DATABASE_FILENAME=data.db
 ```bash
 cd backend
 npm run develop
+# o con pnpm
+# pnpm develop
 ```
 
 Strapi estará disponible en: http://localhost:1337
