@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sports",
+  "info": {
+    "singularName": "sport",
+    "pluralName": "sports",
+    "displayName": "Sport",
+    "description": "Deportes disponibles (béisbol, fútbol, NBA, etc.)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Nombre del deporte (ej: Béisbol, Fútbol, NBA)"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "iconUrl": {
+      "type": "string",
+      "description": "URL del ícono del deporte"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "teams": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::team.team",
+      "mappedBy": "sport"
+    },
+    "matches": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::match.match",
+      "mappedBy": "sport"
+    }
+  }
+}

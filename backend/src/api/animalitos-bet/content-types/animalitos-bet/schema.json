@@ -1,0 +1,59 @@
+{
+  "kind": "collectionType",
+  "collectionName": "animalitos_bets",
+  "info": {
+    "singularName": "animalitos-bet",
+    "pluralName": "animalitos-bets",
+    "displayName": "Animalitos Bet",
+    "description": "Apuestas a animalitos"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "draw": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::animalitos-draw.animalitos-draw",
+      "inversedBy": "bets"
+    },
+    "animalito": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::animalito.animalito",
+      "inversedBy": "bets"
+    },
+    "ticketCode": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Código único del ticket"
+    },
+    "betAmount": {
+      "type": "decimal",
+      "required": true
+    },
+    "potentialWin": {
+      "type": "decimal",
+      "required": true,
+      "description": "Ganancia potencial = betAmount * payoutMultiplier"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "won", "lost"],
+      "default": "pending",
+      "required": true
+    },
+    "paidAmount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "userName": {
+      "type": "string"
+    },
+    "userPhone": {
+      "type": "string"
+    }
+  }
+}

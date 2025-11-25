@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+.cache/
+.tmp/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Strapi
+backend/database/*.db
+backend/.strapi/
+backend/.strapi-updater.json
+backend/exports/
+backend/public/uploads/
+
+# Angular
+frontend/.angular/
+frontend/dist/
+frontend/tmp/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+.tmp/
+*.pid
+*.seed
+*.pid.lock
