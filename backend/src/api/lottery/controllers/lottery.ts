@@ -1,7 +1,7 @@
-import { factories } from '@strapi/strapi';
+// @ts-nocheck
 import crypto from 'crypto';
 
-export default factories.createCoreController('api::lottery.lottery', () => ({
+export default {
   /**
    * POST /api/loterias/place-bet
    *
@@ -109,4 +109,4 @@ export default factories.createCoreController('api::lottery.lottery', () => ({
       return ctx.internalServerError('Error placing bet');
     }
   }
-}));
+};

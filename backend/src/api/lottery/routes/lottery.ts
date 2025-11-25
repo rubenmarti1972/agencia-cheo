@@ -5,7 +5,7 @@ export default {
     {
       method: 'POST',
       path: '/loterias/place-bet',
-      handler: 'api::lottery.lottery.placeBet',
+      handler: 'lottery.placeBet',
       config: {
         auth: false,
         policies: [],

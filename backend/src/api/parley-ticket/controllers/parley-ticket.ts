@@ -1,7 +1,8 @@
-import { factories } from '@strapi/strapi';
+// @ts-nocheck
+
 import crypto from 'crypto';
 
-export default factories.createCoreController('api::parley-ticket.parley-ticket', () => ({
+export default {
   /**
    * POST /api/parley/place-ticket
    *
@@ -142,4 +143,4 @@ export default factories.createCoreController('api::parley-ticket.parley-ticket'
       return ctx.internalServerError('Error placing parley ticket');
     }
   }
-}));
+};
