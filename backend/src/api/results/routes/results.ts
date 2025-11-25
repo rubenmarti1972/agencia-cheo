@@ -8,54 +8,54 @@ export default {
     {
       method: 'GET',
       path: '/results/today',
-      handler: 'api::results.results.getToday',
+      handler: 'results.getToday',
       info: {
         contentType: 'api::lottery-draw.lottery-draw',
       },
       config: {
-        auth: false, // Público
+        auth: false,
         policies: [],
-        middlewares: []
-      }
+        middlewares: [],
+      },
     },
     {
       method: 'GET',
       path: '/results/date/:date',
-      handler: 'api::results.results.getByDate',
+      handler: 'results.getByDate',
       info: {
         contentType: 'api::lottery-draw.lottery-draw',
       },
       config: {
-        auth: false, // Público
+        auth: false,
         policies: [],
-        middlewares: []
-      }
+        middlewares: [],
+      },
     },
     {
       method: 'POST',
       path: '/results/scrape',
-      handler: 'api::results.results.scrapeNow',
+      handler: 'results.scrapeNow',
       info: {
         contentType: 'api::lottery-draw.lottery-draw',
       },
       config: {
-        auth: false, // En producción, cambiar a true y agregar policies
+        auth: false,
         policies: [],
-        middlewares: []
-      }
+        middlewares: [],
+      },
     },
     {
       method: 'GET',
       path: '/results/cron-status',
-      handler: 'api::results.results.getCronStatus',
+      handler: 'results.getCronStatus',
       info: {
         contentType: 'api::lottery-draw.lottery-draw',
       },
       config: {
-        auth: false, // En producción, cambiar a true
+        auth: false,
         policies: [],
-        middlewares: []
-      }
-    }
-  ]
+        middlewares: [],
+      },
+    },
+  ],
 };

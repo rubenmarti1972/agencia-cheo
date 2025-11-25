@@ -12,6 +12,8 @@ export default {
       },
       config: {
         auth: false,
+        policies: [],
+        middlewares: [],
       },
     },
   ],
