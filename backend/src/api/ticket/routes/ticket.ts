@@ -1,5 +1,4 @@
 export default {
-  contentType: 'api::lottery-bet.lottery-bet',
   routes: [
     {
       method: 'GET',
@@ -16,3 +15,4 @@ export default {
     },
   ],
 };
+

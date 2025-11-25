@@ -1,7 +1,6 @@
 import { ANIMALITOS_BET_UID } from '../constants';
 
 export default {
-  contentType: ANIMALITOS_BET_UID,
   routes: [
     {
       method: 'POST',

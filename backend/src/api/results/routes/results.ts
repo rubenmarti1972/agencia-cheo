@@ -3,7 +3,6 @@
  */
 
 export default {
-  contentType: 'api::lottery-draw.lottery-draw',
   routes: [
     {
       method: 'GET',
@@ -13,7 +12,7 @@ export default {
         contentType: 'api::lottery-draw.lottery-draw',
       },
       config: {
-        auth: false,
+        auth: false, // Público
         policies: [],
         middlewares: [],
       },
@@ -26,7 +25,7 @@ export default {
         contentType: 'api::lottery-draw.lottery-draw',
       },
       config: {
-        auth: false,
+        auth: false, // Público
         policies: [],
         middlewares: [],
       },
@@ -39,7 +38,7 @@ export default {
         contentType: 'api::lottery-draw.lottery-draw',
       },
       config: {
-        auth: false,
+        auth: false, // En producción, cambiar a true y agregar policies
         policies: [],
         middlewares: [],
       },
