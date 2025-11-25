@@ -26,10 +26,20 @@ export default factories.createCoreController('api::lottery-bet.lottery-bet', ()
       });
 
       if (lotteryBets.length > 0) {
+        const bet = lotteryBets[0];
         return ctx.send({
-          data: {
-            type: 'lottery',
-            ticket: lotteryBets[0],
+          type: 'lottery',
+          ticketCode: bet.ticketCode,
+          status: bet.status,
+          amount: bet.betAmount,
+          potentialWin: bet.potentialWin,
+          payout: bet.paidAmount || 0,
+          details: {
+            betNumber: bet.betNumber,
+            lottery: bet.draw?.lottery?.name,
+            drawDate: bet.draw?.drawDate,
+            drawTime: bet.draw?.drawTime,
+            winningNumber: bet.draw?.winningNumber
           }
         });
       }
@@ -46,10 +56,22 @@ export default factories.createCoreController('api::lottery-bet.lottery-bet', ()
       });
 
       if (animalitosBets.length > 0) {
+        const bet = animalitosBets[0];
         return ctx.send({
-          data: {
-            type: 'animalitos',
-            ticket: animalitosBets[0],
+          type: 'animalitos',
+          ticketCode: bet.ticketCode,
+          status: bet.status,
+          amount: bet.betAmount,
+          potentialWin: bet.potentialWin,
+          payout: bet.paidAmount || 0,
+          details: {
+            animalito: {
+              number: bet.animalito?.number,
+              name: bet.animalito?.name
+            },
+            game: bet.draw?.game?.name,
+            drawDate: bet.draw?.drawDate,
+            winningAnimalNumber: bet.draw?.winningAnimalNumber
           }
         });
       }
@@ -73,10 +95,23 @@ export default factories.createCoreController('api::lottery-bet.lottery-bet', ()
       });
 
       if (parleyTickets.length > 0) {
+        const ticket = parleyTickets[0];
         return ctx.send({
-          data: {
-            type: 'parley',
-            ticket: parleyTickets[0],
+          type: 'parley',
+          ticketCode: ticket.ticketCode,
+          status: ticket.status,
+          amount: ticket.betAmount,
+          potentialWin: ticket.potentialWin,
+          payout: ticket.paidAmount || 0,
+          details: {
+            totalOdds: ticket.totalOdds,
+            legs: ticket.legs?.map((leg: any) => ({
+              match: `${leg.market?.match?.homeTeam?.name} vs ${leg.market?.match?.awayTeam?.name}`,
+              market: leg.market?.name,
+              selection: leg.market?.selection,
+              odds: leg.odds,
+              status: leg.status
+            }))
           }
         });
       }
