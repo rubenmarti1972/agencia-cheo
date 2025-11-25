@@ -3,6 +3,7 @@
  */
 
 export default {
+  contentType: 'api::lottery-draw.lottery-draw',
   routes: [
     {
       method: 'GET',
