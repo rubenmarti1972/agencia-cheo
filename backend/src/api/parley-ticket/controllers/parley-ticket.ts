@@ -49,14 +49,16 @@ export default factories.createCoreController('api::parley-ticket.parley-ticket'
         return ctx.badRequest(`Market with id ${marketIds[notFound]} not found`);
       }
 
+      const existingMarkets = markets.filter(Boolean) as NonNullable<typeof markets[number]>[];
+
       // Validar que todos los mercados están activos
-      const inactiveMarket = markets.find(m => !m.isActive);
+      const inactiveMarket = existingMarkets.find(m => !m.isActive);
       if (inactiveMarket) {
         return ctx.badRequest(`Market ${inactiveMarket.id} is not active`);
       }
 
       // Validar que todos los partidos están programados o en vivo
-      for (const market of markets) {
+      for (const market of existingMarkets) {
         // @ts-ignore
         const match = market.match;
         if (!match) {
@@ -69,14 +71,14 @@ export default factories.createCoreController('api::parley-ticket.parley-ticket'
       }
 
       // Validar que no hay partidos duplicados
-      const matchIds = markets.map((m: any) => m.match.id);
+      const matchIds = existingMarkets.map((m: any) => m.match.id);
       const uniqueMatches = new Set(matchIds);
       if (uniqueMatches.size !== matchIds.length) {
         return ctx.badRequest('Cannot select multiple markets from the same match');
       }
 
       // Calcular odd total (producto de todas las odds)
-      const totalOdds = markets.reduce((acc, market) => acc * parseFloat(market.odds as string), 1);
+      const totalOdds = existingMarkets.reduce((acc, market) => acc * parseFloat(market.odds as string), 1);
 
       // Calcular ganancia potencial
       const potentialWin = betAmount * totalOdds;
@@ -100,7 +102,7 @@ export default factories.createCoreController('api::parley-ticket.parley-ticket'
 
       // Crear los legs (selecciones)
       const legs = await Promise.all(
-        markets.map(market =>
+        existingMarkets.map(market =>
           strapi.entityService.create('api::parley-leg.parley-leg', {
             data: {
               ticket: ticket.id,

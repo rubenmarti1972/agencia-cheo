@@ -102,13 +102,14 @@ export class ResultsService {
           }
         }
       );
+      const gamesList = Array.isArray(games) ? games : games ? [games] : [];
 
-      if (!games || games.length === 0) {
+      if (gamesList.length === 0) {
         logger.warn('ResultsService', `Juego no encontrado: ${result.gameName}`);
         return false;
       }
 
-      const game = games[0];
+      const game = gamesList[0];
 
       // 2. Buscar el sorteo del día
       const draws = await this.strapi.entityService.findMany(
@@ -121,8 +122,9 @@ export class ResultsService {
           }
         }
       );
+      const drawsList = Array.isArray(draws) ? draws : draws ? [draws] : [];
 
-      if (!draws || draws.length === 0) {
+      if (drawsList.length === 0) {
         logger.warn('ResultsService', 'Sorteo no encontrado o ya procesado', {
           game: result.gameName,
           date: result.drawDate
@@ -130,7 +132,7 @@ export class ResultsService {
         return false;
       }
 
-      const draw = draws[0];
+      const draw = drawsList[0];
 
       // 3. Verificar que no esté ya actualizado
       if (draw.status === 'result_published' && draw.winningAnimalNumber) {
@@ -144,12 +146,12 @@ export class ResultsService {
       // 4. Actualizar el sorteo con el resultado
       await this.strapi.entityService.update(
         'api::animalitos-draw.animalitos-draw',
-        draw.id,
+        Number(draw.id),
         {
           data: {
             winningAnimalNumber: result.winningNumber,
             status: 'result_published'
-          }
+          } as any
         }
       );
 
@@ -161,7 +163,7 @@ export class ResultsService {
       // 5. Actualizar tickets
       const ticketsUpdater = getTicketsUpdater(this.strapi);
       const updateResult = await ticketsUpdater.updateAnimalitosTickets(
-        draw.id,
+        Number(draw.id),
         result.winningNumber
       );
 
@@ -261,13 +263,14 @@ export class ResultsService {
           }
         }
       );
+      const lotteriesList = Array.isArray(lotteries) ? lotteries : lotteries ? [lotteries] : [];
 
-      if (!lotteries || lotteries.length === 0) {
+      if (lotteriesList.length === 0) {
         logger.warn('ResultsService', `Lotería no encontrada: ${result.lotteryName}`);
         return false;
       }
 
-      const lottery = lotteries[0];
+      const lottery = lotteriesList[0];
 
       // 2. Buscar el sorteo del día
       const draws = await this.strapi.entityService.findMany(
@@ -280,8 +283,9 @@ export class ResultsService {
           }
         }
       );
+      const drawsList = Array.isArray(draws) ? draws : draws ? [draws] : [];
 
-      if (!draws || draws.length === 0) {
+      if (drawsList.length === 0) {
         logger.warn('ResultsService', 'Sorteo de lotería no encontrado', {
           lottery: result.lotteryName,
           date: result.drawDate
@@ -289,7 +293,7 @@ export class ResultsService {
         return false;
       }
 
-      const draw = draws[0];
+      const draw = drawsList[0];
 
       // 3. Verificar que no esté ya actualizado
       if (draw.status === 'result_published' && draw.winningNumber) {
@@ -303,12 +307,12 @@ export class ResultsService {
       // 4. Actualizar el sorteo con el resultado
       await this.strapi.entityService.update(
         'api::lottery-draw.lottery-draw',
-        draw.id,
+        Number(draw.id),
         {
           data: {
             winningNumber: result.winningNumber,
             status: 'result_published'
-          }
+          } as any
         }
       );
 
@@ -320,7 +324,7 @@ export class ResultsService {
       // 5. Actualizar tickets
       const ticketsUpdater = getTicketsUpdater(this.strapi);
       const updateResult = await ticketsUpdater.updateLotteryTickets(
-        draw.id,
+        Number(draw.id),
         result.winningNumber
       );
 
