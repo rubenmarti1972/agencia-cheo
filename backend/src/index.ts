@@ -2,23 +2,13 @@ import type { Core } from '@strapi/strapi';
 import { bootstrapScheduler } from './cron/scheduler';
 
 export default {
-  /**
-   * An asynchronous register function that runs before
-   * your application is initialized.
-   *
-   * This gives you an opportunity to extend code.
-   */
   register(/* { strapi } */) {},
 
-  /**
-   * An asynchronous bootstrap function that runs before
-   * your application gets started.
-   *
-   * This gives you an opportunity to set up your data model,
-   * run jobs, or perform some special logic.
-   */
-  bootstrap({ strapi }: { strapi: Core.Strapi }) {
+  async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     // Inicializar el scheduler de cron jobs para scraping automático
     bootstrapScheduler(strapi);
+
+    // Para ejecutar el seed, usa: POST /api/seed/run
+    console.log('\n💡 Tip: Para poblar la base de datos, ejecuta: curl -X POST http://localhost:1337/api/seed/run\n');
   },
 };
