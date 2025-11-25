@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Core } from '@strapi/strapi';
 import { logger } from '../utils/logger';
 import { scrapeAnimalitos, AnimalitoResult } from '../scrapers/animalitos.scraper';

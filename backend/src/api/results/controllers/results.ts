@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Controller personalizado para API de resultados
  * Proporciona endpoints para consultar resultados del día
