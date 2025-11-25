@@ -1,0 +1,242 @@
+<div class="loterias-page">
+  <div class="container">
+    <!-- Header -->
+    <div class="page-header">
+      <h1>🎟️ Loterías Venezolanas</h1>
+      <p>Apuesta a las mejores loterías de Venezuela y multiplica tus ganancias</p>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="loading-card card">
+        <p class="text-center">Cargando...</p>
+      </div>
+    }
+
+    <!-- Error Message -->
+    @if (error()) {
+      <div class="error-card card">
+        <p>{{ error() }}</p>
+        <button class="btn btn-primary btn-sm" (click)="loadLotteries()">Reintentar</button>
+      </div>
+    }
+
+    <!-- Success Ticket -->
+    @if (successTicket()) {
+      <div class="success-card card fade-in">
+        <div class="success-icon">✅</div>
+        <h2>¡Apuesta Registrada!</h2>
+        <div class="ticket-info">
+          <p class="ticket-code">{{ successTicket()!.ticketCode }}</p>
+          <p class="text-secondary">Guarda este código para consultar tu ticket</p>
+        </div>
+        <div class="ticket-details">
+          <div class="detail">
+            <span>Lotería:</span>
+            <strong>{{ selectedLottery()?.name }}</strong>
+          </div>
+          <div class="detail">
+            <span>Número:</span>
+            <strong>{{ successTicket()!.bet.betNumber }}</strong>
+          </div>
+          <div class="detail">
+            <span>Monto:</span>
+            <strong>Bs. {{ successTicket()!.bet.betAmount | number:'1.2-2' }}</strong>
+          </div>
+          <div class="detail highlight">
+            <span>Ganancia Potencial:</span>
+            <strong class="text-accent">Bs. {{ successTicket()!.bet.potentialWin | number:'1.2-2' }}</strong>
+          </div>
+        </div>
+        <div class="success-actions">
+          <button class="btn btn-primary" (click)="goBack()">Nueva Apuesta</button>
+          <a routerLink="/consultar-ticket" class="btn btn-outline">Consultar Ticket</a>
+        </div>
+      </div>
+    }
+
+    <!-- Step 1: Select Lottery -->
+    @if (!selectedLottery() && !successTicket()) {
+      <div class="lotteries-grid">
+        @for (lottery of lotteries(); track lottery.id) {
+          <div
+            class="lottery-card card"
+            [class.inactive]="!lottery.isActive"
+            (click)="lottery.isActive && selectLottery(lottery)"
+          >
+            <h3>{{ lottery.name }}</h3>
+            @if (lottery.description) {
+              <p class="text-secondary">{{ lottery.description }}</p>
+            }
+            <div class="lottery-info">
+              <div class="info-item">
+                <span class="label">Multiplicador:</span>
+                <span class="value text-accent">{{ lottery.payoutMultiplier }}x</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Mínimo:</span>
+                <span class="value">Bs. {{ lottery.minBetAmount }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Máximo:</span>
+                <span class="value">Bs. {{ lottery.maxBetAmount }}</span>
+              </div>
+            </div>
+            @if (!lottery.isActive) {
+              <span class="badge badge-warning">Inactiva</span>
+            } @else {
+              <button class="btn btn-primary">Jugar Ahora</button>
+            }
+          </div>
+        } @empty {
+          <div class="empty-state card">
+            <p>No hay loterías disponibles en este momento</p>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Step 2: Select Draw -->
+    @if (selectedLottery() && !selectedDraw() && !successTicket()) {
+      <div class="draws-section">
+        <div class="section-header">
+          <button class="btn btn-outline btn-sm" (click)="goBack()">← Volver</button>
+          <h2>{{ selectedLottery()!.name }}</h2>
+        </div>
+
+        <div class="draws-grid">
+          @for (draw of openDraws(); track draw.id) {
+            <div
+              class="draw-card card"
+              [class.closed]="draw.status !== 'open'"
+              (click)="draw.status === 'open' && selectDraw(draw)"
+            >
+              <div class="draw-header">
+                <h4>{{ draw.drawDate }}</h4>
+                <span class="badge" [class]="getDrawStatusClass(draw)">
+                  {{ getDrawStatusText(draw) }}
+                </span>
+              </div>
+              <div class="draw-info">
+                <div class="info-row">
+                  <span>🕐 Hora del sorteo:</span>
+                  <strong>{{ formatTime(draw.drawTime) }}</strong>
+                </div>
+                <div class="info-row">
+                  <span>⏰ Cierra:</span>
+                  <strong>{{ draw.closeMinutesBefore }} min antes</strong>
+                </div>
+              </div>
+              @if (draw.status === 'open') {
+                <button class="btn btn-accent">Apostar</button>
+              }
+            </div>
+          } @empty {
+            <div class="empty-state card">
+              <p>No hay sorteos abiertos en este momento</p>
+              <button class="btn btn-primary btn-sm" (click)="loadOpenDraws(selectedLottery()!.id)">Actualizar</button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Step 3: Place Bet -->
+    @if (selectedDraw() && !successTicket()) {
+      <div class="bet-section">
+        <div class="section-header">
+          <button class="btn btn-outline btn-sm" (click)="goBack()">← Volver</button>
+          <h2>Realizar Apuesta</h2>
+        </div>
+
+        <div class="bet-container">
+          <div class="bet-info card">
+            <h3>{{ selectedLottery()!.name }}</h3>
+            <div class="draw-details">
+              <p><strong>Fecha:</strong> {{ selectedDraw()!.drawDate }}</p>
+              <p><strong>Hora:</strong> {{ formatTime(selectedDraw()!.drawTime) }}</p>
+              <p><strong>Multiplicador:</strong> <span class="text-accent">{{ selectedLottery()!.payoutMultiplier }}x</span></p>
+            </div>
+          </div>
+
+          <form [formGroup]="betForm" (ngSubmit)="placeBet()" class="bet-form card">
+            <div class="form-group">
+              <label for="betNumber">Número (2-4 dígitos) *</label>
+              <input
+                type="text"
+                id="betNumber"
+                formControlName="betNumber"
+                placeholder="Ej: 15, 234, 5678"
+                maxlength="4"
+              />
+              @if (betForm.get('betNumber')?.invalid && betForm.get('betNumber')?.touched) {
+                <span class="error-message">Ingresa un número válido de 2-4 dígitos</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="betAmount">Monto (Bs.) *</label>
+              <input
+                type="number"
+                id="betAmount"
+                formControlName="betAmount"
+                [min]="selectedLottery()!.minBetAmount"
+                [max]="selectedLottery()!.maxBetAmount"
+                placeholder="Monto a apostar"
+              />
+              <small class="text-secondary">
+                Mínimo: Bs. {{ selectedLottery()!.minBetAmount | number:'1.2-2' }} -
+                Máximo: Bs. {{ selectedLottery()!.maxBetAmount | number:'1.2-2' }}
+              </small>
+              @if (betForm.get('betAmount')?.invalid && betForm.get('betAmount')?.touched) {
+                <span class="error-message">Monto debe estar entre el mínimo y máximo permitido</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="userName">Nombre (opcional)</label>
+              <input
+                type="text"
+                id="userName"
+                formControlName="userName"
+                placeholder="Tu nombre"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="userPhone">Teléfono (opcional)</label>
+              <input
+                type="tel"
+                id="userPhone"
+                formControlName="userPhone"
+                placeholder="04121234567"
+              />
+              @if (betForm.get('userPhone')?.invalid && betForm.get('userPhone')?.touched) {
+                <span class="error-message">Teléfono debe tener 10-11 dígitos</span>
+              }
+            </div>
+
+            @if (potentialWin() > 0) {
+              <div class="potential-win">
+                <span>Ganancia Potencial:</span>
+                <strong class="text-accent">Bs. {{ potentialWin() | number:'1.2-2' }}</strong>
+              </div>
+            }
+
+            <button
+              type="submit"
+              class="btn btn-accent btn-lg"
+              [disabled]="betForm.invalid || loading()"
+            >
+              @if (loading()) {
+                <span>Procesando...</span>
+              } @else {
+                <span>Confirmar Apuesta</span>
+              }
+            </button>
+          </form>
+        </div>
+      </div>
+    }
+  </div>
+</div>
