@@ -81,24 +81,26 @@
         </div>
 
         <!-- Detalles específicos por tipo -->
-        @if (ticketResult()!.type === 'lottery') {
+        @if (isLotteryTicket() && getLotteryBet()) {
           <div class="type-details">
             <h4>Detalles de la Lotería</h4>
-            <p><strong>Número Apostado:</strong> {{ (ticketResult()!.ticket as any).betNumber }}</p>
+            <p><strong>Número Apostado:</strong> {{ getLotteryBet()!.betNumber }}</p>
           </div>
         }
 
-        @if (ticketResult()!.type === 'animalitos') {
+        @if (isAnimalitosTicket() && getAnimalitosBet()) {
           <div class="type-details">
             <h4>Detalles de Animalitos</h4>
-            <p><strong>Animalito:</strong> #{{ (ticketResult()!.ticket as any).animalito?.number }} - {{ (ticketResult()!.ticket as any).animalito?.name }}</p>
+            @if (getAnimalitosBet()!.animalito) {
+              <p><strong>Animalito:</strong> #{{ getAnimalitosBet()!.animalito!.number }} - {{ getAnimalitosBet()!.animalito!.name }}</p>
+            }
           </div>
         }
 
-        @if (ticketResult()!.type === 'parley' && (ticketResult()!.ticket as any).legs) {
+        @if (isParleyTicket() && getParleyTicket()?.legs) {
           <div class="type-details">
             <h4>Selecciones del Parley</h4>
-            @for (leg of (ticketResult()!.ticket as any).legs; track leg.id) {
+            @for (leg of getParleyTicket()!.legs!; track leg.id) {
               <div class="parley-leg">
                 <p><strong>Selección:</strong> {{ leg.market?.name }}</p>
                 <p><strong>Cuota:</strong> {{ leg.odds }}</p>
