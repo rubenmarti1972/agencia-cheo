@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Backend Strapi 5.30.1 para Agencia Cheo - Plataforma de Apuestas",
   "scripts": {
-    "develop": "strapi develop",
-    "start": "strapi start",
+    "prepare:schemas": "node scripts/prepare-schemas.js",
+    "develop": "npm run prepare:schemas && strapi develop",
+    "start": "npm run prepare:schemas && strapi start",
     "build": "strapi build && ./copy-schemas.sh",
     "strapi": "strapi",
     "postbuild": "./copy-schemas.sh"
