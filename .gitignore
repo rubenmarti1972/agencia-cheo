@@ -32,7 +32,8 @@ backend/database/*.db
 backend/.strapi/
 backend/.strapi-updater.json
 backend/exports/
-backend/public/uploads/
+backend/public/uploads/*
+!backend/public/uploads/.gitkeep
 
 # Angular
 frontend/.angular/

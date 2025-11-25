@@ -24,9 +24,10 @@ export default factories.createCoreController('api::lottery-bet.lottery-bet', ()
           }
         }
       });
+      const lotteryBetsList = Array.isArray(lotteryBets) ? lotteryBets : lotteryBets ? [lotteryBets] : [];
 
-      if (lotteryBets.length > 0) {
-        const bet = lotteryBets[0];
+      if (lotteryBetsList.length > 0) {
+        const bet = lotteryBetsList[0];
         return ctx.send({
           type: 'lottery',
           ticketCode: bet.ticketCode,
@@ -54,9 +55,10 @@ export default factories.createCoreController('api::lottery-bet.lottery-bet', ()
           animalito: true
         }
       });
+      const animalitosBetsList = Array.isArray(animalitosBets) ? animalitosBets : animalitosBets ? [animalitosBets] : [];
 
-      if (animalitosBets.length > 0) {
-        const bet = animalitosBets[0];
+      if (animalitosBetsList.length > 0) {
+        const bet = animalitosBetsList[0];
         return ctx.send({
           type: 'animalitos',
           ticketCode: bet.ticketCode,
@@ -93,9 +95,10 @@ export default factories.createCoreController('api::lottery-bet.lottery-bet', ()
           }
         }
       });
+      const parleyTicketsList = Array.isArray(parleyTickets) ? parleyTickets : parleyTickets ? [parleyTickets] : [];
 
-      if (parleyTickets.length > 0) {
-        const ticket = parleyTickets[0];
+      if (parleyTicketsList.length > 0) {
+        const ticket = parleyTicketsList[0];
         return ctx.send({
           type: 'parley',
           ticketCode: ticket.ticketCode,
