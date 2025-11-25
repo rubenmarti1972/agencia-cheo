@@ -7,9 +7,11 @@ const PROJECT_ROOT = path.resolve(__dirname, '..');
 const SRC_API = path.join(PROJECT_ROOT, 'src', 'api');
 const DIST_API = path.join(PROJECT_ROOT, 'dist', 'src', 'api');
 
-const copySchemasToDist = (strapi: Core.Strapi) => {
+const copySchemasToDist = (logger?: { info: (msg: string) => void; warn: (msg: string) => void }) => {
+  const log = logger ?? console;
+
   if (!fs.existsSync(SRC_API)) {
-    strapi.log.warn('No src/api directory found; skipping schema sync.');
+    log.warn('No src/api directory found; skipping schema sync.');
     return;
   }
 
@@ -27,12 +29,15 @@ const copySchemasToDist = (strapi: Core.Strapi) => {
     }
   }
 
-  strapi.log.info('Synced content-type schemas into dist.');
+  log.info('Synced content-type schemas into dist.');
 };
+
+// Ejecutar la sincronización lo antes posible, antes de que Strapi intente registrar rutas
+copySchemasToDist();
 
 export default {
   register({ strapi }: { strapi: Core.Strapi }) {
-    copySchemasToDist(strapi);
+    copySchemasToDist(strapi.log);
   },
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
