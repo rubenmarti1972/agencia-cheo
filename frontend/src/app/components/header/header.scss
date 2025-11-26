@@ -15,24 +15,53 @@
 
 .logo {
   display: flex;
-  align-items: baseline;
-  gap: var(--spacing-xs);
-  font-size: var(--font-size-2xl);
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   text-decoration: none;
   transition: transform var(--transition-fast);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 
   &:hover {
     transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
   }
 }
 
 .logo-text {
   color: var(--color-text-inverse);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: var(--font-size-lg);
 }
 
 .logo-accent {
   color: var(--color-secondary);
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: var(--font-size-2xl);
+  text-shadow: 2px 2px 4px rgba(245, 158, 11, 0.3),
+               0 0 20px rgba(245, 158, 11, 0.2);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    text-shadow: 2px 2px 4px rgba(245, 158, 11, 0.3),
+                 0 0 20px rgba(245, 158, 11, 0.2);
+  }
+  50% {
+    text-shadow: 2px 2px 6px rgba(245, 158, 11, 0.5),
+                 0 0 30px rgba(245, 158, 11, 0.4);
+  }
 }
 
 .nav-links {
