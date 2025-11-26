@@ -19,19 +19,59 @@
     @if (successTicket()) {
       <div class="success-card card fade-in">
         <div class="success-icon">✅</div>
-        <h2>¡Parley Creado!</h2>
-        <div class="ticket-info">
-          <p class="ticket-code">{{ successTicket()!.ticketCode }}</p>
-        </div>
-        <div class="ticket-details">
-          <div class="detail"><span>Selecciones:</span><strong>{{ successTicket()!.ticket.legs?.length }}</strong></div>
-          <div class="detail"><span>Cuota Total:</span><strong class="text-accent">{{ successTicket()!.ticket.totalOdds | number:'1.2-2' }}</strong></div>
-          <div class="detail"><span>Monto:</span><strong>Bs. {{ successTicket()!.ticket.betAmount | number:'1.2-2' }}</strong></div>
-          <div class="detail highlight">
-            <span>Ganancia Potencial:</span>
-            <strong class="text-accent">Bs. {{ successTicket()!.ticket.potentialWin | number:'1.2-2' }}</strong>
+        <h2>¡Ticket Creado Exitosamente!</h2>
+
+        <div class="ticket-preview">
+          <div class="ticket-header">
+            <div class="ticket-logo">🎫</div>
+            <div>
+              <h3>AGENCIA CHEO</h3>
+              <p class="ticket-code">{{ successTicket()!.ticketCode }}</p>
+            </div>
+          </div>
+
+          <div class="ticket-customer">
+            <p><strong>Cliente:</strong> {{ successTicket()!.ticket.userName || 'Anónimo' }}</p>
+            @if (successTicket()!.ticket.userPhone) {
+              <p><strong>Teléfono:</strong> {{ successTicket()!.ticket.userPhone }}</p>
+            }
+          </div>
+
+          <div class="ticket-details">
+            <div class="detail-row">
+              <span>Selecciones:</span>
+              <strong>{{ successTicket()!.ticket.legs?.length }}</strong>
+            </div>
+            <div class="detail-row">
+              <span>Cuota Total:</span>
+              <strong class="text-accent">{{ successTicket()!.ticket.totalOdds | number:'1.2-2' }}</strong>
+            </div>
+            <div class="detail-row">
+              <span>Monto Apostado:</span>
+              <strong>Bs. {{ successTicket()!.ticket.betAmount | number:'1.2-2' }}</strong>
+            </div>
+            <div class="detail-row highlight">
+              <span>Ganancia Potencial:</span>
+              <strong class="win-amount">Bs. {{ successTicket()!.ticket.potentialWin | number:'1.2-2' }}</strong>
+            </div>
+          </div>
+
+          <div class="ticket-selections">
+            <h4>Tus Selecciones:</h4>
+            @for (leg of successTicket()!.ticket.legs; track leg.id) {
+              <div class="selection-detail">
+                <div class="selection-match">
+                  {{ leg.market?.match?.homeTeam?.name }} vs {{ leg.market?.match?.awayTeam?.name }}
+                </div>
+                <div class="selection-pick">
+                  <span>{{ leg.market?.name }}</span>
+                  <strong>{{ leg.odds | number:'1.2-2' }}</strong>
+                </div>
+              </div>
+            }
           </div>
         </div>
+
         <div class="success-actions">
           <button class="btn btn-primary" (click)="goBack()">Nuevo Parley</button>
           <a routerLink="/consultar-ticket" class="btn btn-outline">Consultar Ticket</a>
@@ -41,115 +81,239 @@
 
     @if (!successTicket()) {
       <div class="parley-builder">
-        <!-- Matches List -->
+        <!-- Matches Section -->
         <div class="matches-section">
-          <h2>Partidos Disponibles</h2>
-          <div class="matches-list">
-            @for (match of matches(); track match.id) {
-              <div class="match-card card">
-                <div class="match-header">
+          <h2>📅 Partidos Disponibles</h2>
+
+          @for (match of matches(); track match.id) {
+            <div class="match-card card">
+              <!-- Match Header -->
+              <div class="match-header">
+                <div class="match-info">
                   <span class="sport-badge">{{ match.sport?.name }}</span>
                   <span class="match-date">{{ formatDate(match.matchDate) }}</span>
                 </div>
-                <div class="match-teams">
-                  <div class="team">{{ match.homeTeam?.name }}</div>
-                  <div class="vs">vs</div>
-                  <div class="team">{{ match.awayTeam?.name }}</div>
-                </div>
-                @if (match.markets && match.markets.length > 0) {
-                  <div class="markets">
-                    @for (market of match.markets; track market.id) {
-                      <button
-                        class="market-btn"
-                        [class.selected]="isMarketSelected(market.id)"
-                        (click)="toggleMarket(market, match)"
-                      >
-                        <span class="market-name">{{ market.name }}</span>
-                        <span class="market-odds">{{ market.odds }}</span>
-                      </button>
-                    }
-                  </div>
-                }
               </div>
-            } @empty {
-              <div class="empty-state card">No hay partidos disponibles</div>
-            }
-          </div>
+
+              <!-- Match Teams -->
+              <div class="match-teams">
+                <div class="team home">
+                  <span class="team-name">{{ match.homeTeam?.name }}</span>
+                </div>
+                <div class="vs">vs</div>
+                <div class="team away">
+                  <span class="team-name">{{ match.awayTeam?.name }}</span>
+                </div>
+              </div>
+
+              <!-- Markets -->
+              @if (match.markets && match.markets.length > 0) {
+                <div class="markets-container">
+                  <!-- Ganador del Partido (1X2) -->
+                  @if (getMarketsByType(match.markets, 'moneyline').length > 0) {
+                    <div class="market-group">
+                      <h4 class="market-title">Ganador del Partido</h4>
+                      <div class="markets-grid">
+                        @for (market of getMarketsByType(match.markets, 'moneyline'); track market.id) {
+                          <button
+                            class="market-btn"
+                            [class.selected]="isMarketSelected(market.id)"
+                            (click)="toggleMarket(market, match)"
+                          >
+                            <span class="market-name">{{ market.name }}</span>
+                            <span class="market-odds">{{ market.odds | number:'1.2-2' }}</span>
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  }
+
+                  <!-- Over/Under -->
+                  @if (getMarketsByType(match.markets, 'over_under').length > 0) {
+                    <div class="market-group">
+                      <h4 class="market-title">Total de Goles</h4>
+                      <div class="markets-grid">
+                        @for (market of getMarketsByType(match.markets, 'over_under'); track market.id) {
+                          <button
+                            class="market-btn"
+                            [class.selected]="isMarketSelected(market.id)"
+                            (click)="toggleMarket(market, match)"
+                          >
+                            <span class="market-name">{{ market.name }}</span>
+                            <span class="market-odds">{{ market.odds | number:'1.2-2' }}</span>
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  }
+
+                  <!-- Both Teams Score -->
+                  @if (getMarketsByType(match.markets, 'both_teams_score').length > 0) {
+                    <div class="market-group">
+                      <h4 class="market-title">Ambos Equipos Anotan</h4>
+                      <div class="markets-grid">
+                        @for (market of getMarketsByType(match.markets, 'both_teams_score'); track market.id) {
+                          <button
+                            class="market-btn"
+                            [class.selected]="isMarketSelected(market.id)"
+                            (click)="toggleMarket(market, match)"
+                          >
+                            <span class="market-name">{{ market.name }}</span>
+                            <span class="market-odds">{{ market.odds | number:'1.2-2' }}</span>
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          } @empty {
+            <div class="empty-state card">
+              <p>No hay partidos disponibles en este momento</p>
+              <button class="btn btn-primary" (click)="loadUpcomingMatches()">Recargar</button>
+            </div>
+          }
         </div>
 
-        <!-- Bet Slip -->
+        <!-- Bet Slip (Carrito de Apuestas) -->
         <div class="bet-slip card">
-          <h3>Mi Parley</h3>
-          <div class="selections">
-            @if (selectedMarkets().length === 0) {
-              <p class="text-secondary">Selecciona al menos 2 mercados</p>
-            } @else {
+          <h3>🎯 Mi Parley</h3>
+
+          @if (selectedMarkets().length === 0) {
+            <div class="empty-slip">
+              <p>Selecciona al menos 2 mercados de diferentes partidos para crear tu parley</p>
+            </div>
+          } @else {
+            <div class="selections">
               @for (market of selectedMarkets(); track market.id) {
                 <div class="selection-item">
+                  <button class="remove-btn" (click)="removeMarket(market.id)" title="Eliminar">×</button>
                   <div class="selection-info">
-                    <small>{{ market.match?.homeTeam?.name }} vs {{ market.match?.awayTeam?.name }}</small>
-                    <strong>{{ market.name }}</strong>
+                    <div class="selection-match">
+                      {{ market.match?.homeTeam?.name }} vs {{ market.match?.awayTeam?.name }}
+                    </div>
+                    <div class="selection-pick">
+                      <strong>{{ market.name }}</strong>
+                      <span class="selection-odds">{{ market.odds | number:'1.2-2' }}</span>
+                    </div>
                   </div>
-                  <div class="selection-odds">{{ market.odds }}</div>
                 </div>
               }
-            }
-          </div>
+            </div>
 
-          @if (selectedMarkets().length >= 2) {
-            <form [formGroup]="betForm" (ngSubmit)="placeBet()" class="bet-form">
-              <div class="calculation-breakdown">
-                <h4>📊 Cálculo del Parley</h4>
-                <div class="odds-calculation">
-                  <div class="calc-label">Cuotas seleccionadas:</div>
-                  <div class="odds-list">
-                    @for (market of selectedMarkets(); track market.id; let i = $index) {
-                      <span class="odd-value">
-                        {{ market.odds }}{{ i < selectedMarkets().length - 1 ? ' × ' : '' }}
+            <!-- Cuotas Combinadas -->
+            <div class="total-odds-section">
+              <div class="odds-calculation">
+                <span>Cuota Total:</span>
+                @for (market of selectedMarkets(); track market.id; let i = $index) {
+                  <span class="odd-item">
+                    {{ market.odds | number:'1.2-2' }}{{ i < selectedMarkets().length - 1 ? ' × ' : '' }}
+                  </span>
+                }
+              </div>
+              <div class="total-odds-result">
+                <strong>= {{ totalOdds() | number:'1.2-2' }}</strong>
+              </div>
+            </div>
+
+            @if (selectedMarkets().length >= 2) {
+              <form [formGroup]="betForm" (ngSubmit)="placeBet()" class="bet-form">
+                <!-- Datos del Cliente -->
+                <div class="customer-section">
+                  <h4>📝 Datos del Cliente</h4>
+
+                  <div class="form-group">
+                    <label for="userName">Nombre Completo *</label>
+                    <input
+                      type="text"
+                      id="userName"
+                      formControlName="userName"
+                      placeholder="Ej: Juan Pérez"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="userCedula">Cédula *</label>
+                    <input
+                      type="text"
+                      id="userCedula"
+                      formControlName="userCedula"
+                      placeholder="Ej: V-12345678"
+                      required
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="userPhone">Teléfono *</label>
+                    <input
+                      type="tel"
+                      id="userPhone"
+                      formControlName="userPhone"
+                      placeholder="Ej: 04121234567"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <!-- Monto de Apuesta -->
+                <div class="amount-section">
+                  <h4>💵 Monto a Apostar</h4>
+
+                  <div class="form-group">
+                    <label for="betAmount">Monto (Bs.) *</label>
+                    <input
+                      type="number"
+                      id="betAmount"
+                      formControlName="betAmount"
+                      min="1"
+                      placeholder="Ingresa el monto"
+                      required
+                    />
+                    <small>Mínimo: Bs. 1.00</small>
+                  </div>
+
+                  <!-- Botones de Montos Rápidos -->
+                  <div class="quick-amounts">
+                    <button type="button" class="quick-btn" (click)="setQuickAmount(10)">Bs. 10</button>
+                    <button type="button" class="quick-btn" (click)="setQuickAmount(20)">Bs. 20</button>
+                    <button type="button" class="quick-btn" (click)="setQuickAmount(50)">Bs. 50</button>
+                    <button type="button" class="quick-btn" (click)="setQuickAmount(100)">Bs. 100</button>
+                  </div>
+                </div>
+
+                <!-- Ganancia Potencial -->
+                @if (potentialWin() > 0) {
+                  <div class="potential-win-card">
+                    <div class="win-calculation">
+                      <span class="calc-formula">
+                        Bs. {{ betForm.get('betAmount')?.value || 0 | number:'1.2-2' }}
+                        ×
+                        {{ totalOdds() | number:'1.2-2' }}
                       </span>
-                    }
+                    </div>
+                    <div class="win-result">
+                      <span>🏆 Ganancia Potencial:</span>
+                      <strong class="win-amount">Bs. {{ potentialWin() | number:'1.2-2' }}</strong>
+                    </div>
                   </div>
-                </div>
-                <div class="total-odds-display">
-                  <span>Cuota Total:</span>
-                  <strong class="odds-total">{{ totalOdds() | number:'1.2-2' }}</strong>
-                </div>
+                }
+
+                <!-- Botón de Crear Ticket -->
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-lg btn-submit"
+                  [disabled]="betForm.invalid || loading() || selectedMarkets().length < 2"
+                >
+                  {{ loading() ? '⏳ Procesando...' : '✅ Crear Ticket' }}
+                </button>
+              </form>
+            } @else {
+              <div class="min-selections-warning">
+                <p>⚠️ Necesitas al menos 2 selecciones para crear un parley</p>
               </div>
-
-              <div class="form-group">
-                <label for="betAmount">💵 Monto a Apostar (Bs.) *</label>
-                <input type="number" id="betAmount" formControlName="betAmount" min="1" placeholder="Ingresa tu apuesta" />
-                <small class="text-secondary">Mínimo: Bs. 1.00</small>
-              </div>
-
-              <div class="form-group">
-                <label for="userName">👤 Nombre (opcional)</label>
-                <input type="text" id="userName" formControlName="userName" placeholder="Tu nombre" />
-              </div>
-
-              <div class="form-group">
-                <label for="userPhone">📱 Teléfono (opcional)</label>
-                <input type="tel" id="userPhone" formControlName="userPhone" placeholder="04121234567" />
-              </div>
-
-              @if (potentialWin() > 0) {
-                <div class="potential-win-card">
-                  <div class="win-calculation">
-                    <span class="calc-formula">
-                      Bs. {{ betForm.get('betAmount')?.value || 0 | number:'1.2-2' }} × {{ totalOdds() | number:'1.2-2' }}
-                    </span>
-                  </div>
-                  <div class="win-result">
-                    <span>🏆 Ganancia Potencial:</span>
-                    <strong class="win-amount">Bs. {{ potentialWin() | number:'1.2-2' }}</strong>
-                  </div>
-                </div>
-              }
-
-              <button type="submit" class="btn btn-secondary btn-lg" [disabled]="betForm.invalid || loading()">
-                {{ loading() ? '⏳ Procesando...' : '✅ Confirmar Parley' }}
-              </button>
-            </form>
+            }
           }
         </div>
       </div>

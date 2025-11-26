@@ -42,13 +42,37 @@ export class ParleyComponent implements OnInit {
   constructor() {
     this.betForm = this.fb.group({
       betAmount: [0, [Validators.required, Validators.min(1)]],
-      userName: [''],
-      userPhone: ['', [Validators.pattern(/^\d{10,11}$/)]]
+      userName: ['', [Validators.required]],
+      userCedula: ['', [Validators.required]],
+      userPhone: ['', [Validators.required, Validators.pattern(/^\d{10,11}$/)]]
     });
   }
 
   ngOnInit(): void {
     this.loadUpcomingMatches();
+  }
+
+  /**
+   * Filtrar markets por tipo
+   */
+  getMarketsByType(markets: Market[], marketType: string): Market[] {
+    return markets.filter(m => m.marketType === marketType);
+  }
+
+  /**
+   * Eliminar market del carrito
+   */
+  removeMarket(marketId: number): void {
+    const current = this.selectedMarkets();
+    this.selectedMarkets.set(current.filter(m => m.id !== marketId));
+    this.error.set(null);
+  }
+
+  /**
+   * Establecer monto rápido
+   */
+  setQuickAmount(amount: number): void {
+    this.betForm.patchValue({ betAmount: amount });
   }
 
   loadUpcomingMatches(): void {

@@ -327,13 +327,16 @@ export async function runSeed() {
         });
 
         if (matchMarkets.length === 0) {
-          // Crear markets para este match
+          const homeTeamName = match.homeTeam?.name || 'Local';
+          const awayTeamName = match.awayTeam?.name || 'Visitante';
+
+          // Crear markets con nombres descriptivos
           await strapi.db.query('api::market.market').create({
             data: {
               match: match.id,
               marketType: 'moneyline',
-              name: 'Ganador del Partido',
-              selection: 'Local',
+              name: `${homeTeamName} (Gana)`,
+              selection: 'home',
               odds: 2.10,
               isActive: true,
               result: 'pending'
@@ -344,8 +347,8 @@ export async function runSeed() {
             data: {
               match: match.id,
               marketType: 'moneyline',
-              name: 'Ganador del Partido',
-              selection: 'Empate',
+              name: 'Empate',
+              selection: 'draw',
               odds: 3.20,
               isActive: true,
               result: 'pending'
@@ -356,15 +359,66 @@ export async function runSeed() {
             data: {
               match: match.id,
               marketType: 'moneyline',
-              name: 'Ganador del Partido',
-              selection: 'Visitante',
+              name: `${awayTeamName} (Gana)`,
+              selection: 'away',
               odds: 3.50,
               isActive: true,
               result: 'pending'
             }
           });
 
-          marketsCreated += 3;
+          // Agregar mercados adicionales tipo casas de apuestas profesionales
+          await strapi.db.query('api::market.market').create({
+            data: {
+              match: match.id,
+              marketType: 'over_under',
+              name: 'Más de 2.5 goles',
+              selection: 'over',
+              odds: 1.85,
+              line: 2.5,
+              isActive: true,
+              result: 'pending'
+            }
+          });
+
+          await strapi.db.query('api::market.market').create({
+            data: {
+              match: match.id,
+              marketType: 'over_under',
+              name: 'Menos de 2.5 goles',
+              selection: 'under',
+              odds: 1.95,
+              line: 2.5,
+              isActive: true,
+              result: 'pending'
+            }
+          });
+
+          await strapi.db.query('api::market.market').create({
+            data: {
+              match: match.id,
+              marketType: 'both_teams_score',
+              name: 'Ambos equipos anotan - Sí',
+              selection: 'yes',
+              odds: 1.70,
+              isActive: true,
+              result: 'pending'
+            }
+          });
+
+          await strapi.db.query('api::market.market').create({
+            data: {
+              match: match.id,
+              marketType: 'both_teams_score',
+              name: 'Ambos equipos anotan - No',
+              selection: 'no',
+              odds: 2.10,
+              isActive: true,
+              result: 'pending'
+            }
+          });
+
+          marketsCreated += 7;
         }
       }
 
