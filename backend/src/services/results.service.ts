@@ -85,7 +85,7 @@ export class ResultsService {
 
   /**
    * Actualiza un resultado individual de animalitos
-   */
+   **/
   private async updateAnimalitoResult(result: AnimalitoResult): Promise<boolean> {
     logger.info('ResultsService', 'Actualizando resultado de animalito', {
       game: result.gameName,
