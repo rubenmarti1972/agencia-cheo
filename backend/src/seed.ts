@@ -260,9 +260,28 @@ export async function runSeed() {
     console.log('\n🏟️  Creando partidos de ejemplo...');
     const teams = await strapi.db.query('api::team.team').findMany({ limit: 6 });
 
-    const existingMatches = await strapi.db.query('api::match.match').findMany();
+    if (teams.length >= 4 && futbol) {
+      // SIEMPRE eliminar partidos antiguos y recrearlos con fechas frescas
+      const existingMatches = await strapi.db.query('api::match.match').findMany();
 
-    if (existingMatches.length === 0 && teams.length >= 4 && futbol) {
+      if (existingMatches.length > 0) {
+        console.log(`   Eliminando ${existingMatches.length} partidos antiguos...`);
+        // Primero eliminar markets asociados
+        for (const match of existingMatches) {
+          const markets = await strapi.db.query('api::market.market').findMany({
+            where: { match: match.id }
+          });
+          for (const market of markets) {
+            await strapi.db.query('api::market.market').delete({ where: { id: market.id } });
+          }
+        }
+        // Luego eliminar partidos
+        for (const match of existingMatches) {
+          await strapi.db.query('api::match.match').delete({ where: { id: match.id } });
+        }
+      }
+
+      // Crear partidos nuevos con fechas frescas
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       const tomorrowStr = tomorrow.toISOString().split('T')[0];
@@ -287,9 +306,9 @@ export async function runSeed() {
       for (const match of MATCHES_DATA) {
         await strapi.db.query('api::match.match').create({ data: match });
       }
-      console.log(`✅ ${MATCHES_DATA.length} partidos creados`);
+      console.log(`✅ ${MATCHES_DATA.length} partidos creados para mañana (${tomorrowStr})`);
     } else {
-      console.log(`ℹ️  Ya existen partidos, omitiendo...`);
+      console.log(`ℹ️  No hay suficientes equipos para crear partidos`);
     }
 
     // 9. Crear mercados de apuestas
@@ -298,46 +317,64 @@ export async function runSeed() {
       populate: ['homeTeam', 'awayTeam']
     });
 
-    const existingMarkets = await strapi.db.query('api::market.market').findMany();
+    if (matches.length > 0) {
+      let marketsCreated = 0;
 
-    if (existingMarkets.length === 0 && matches.length > 0) {
       for (const match of matches) {
-        await strapi.db.query('api::market.market').create({
-          data: {
-            match: match.id,
-            marketType: '1X2',
-            selection: 'Local',
-            odds: '2.10',
-            isActive: true,
-            result: null
-          }
+        // Verificar si este match ya tiene markets
+        const matchMarkets = await strapi.db.query('api::market.market').findMany({
+          where: { match: match.id }
         });
 
-        await strapi.db.query('api::market.market').create({
-          data: {
-            match: match.id,
-            marketType: '1X2',
-            selection: 'Empate',
-            odds: '3.20',
-            isActive: true,
-            result: null
-          }
-        });
+        if (matchMarkets.length === 0) {
+          // Crear markets para este match
+          await strapi.db.query('api::market.market').create({
+            data: {
+              match: match.id,
+              marketType: 'moneyline',
+              name: 'Ganador del Partido',
+              selection: 'Local',
+              odds: 2.10,
+              isActive: true,
+              result: 'pending'
+            }
+          });
 
-        await strapi.db.query('api::market.market').create({
-          data: {
-            match: match.id,
-            marketType: '1X2',
-            selection: 'Visitante',
-            odds: '3.50',
-            isActive: true,
-            result: null
-          }
-        });
+          await strapi.db.query('api::market.market').create({
+            data: {
+              match: match.id,
+              marketType: 'moneyline',
+              name: 'Ganador del Partido',
+              selection: 'Empate',
+              odds: 3.20,
+              isActive: true,
+              result: 'pending'
+            }
+          });
+
+          await strapi.db.query('api::market.market').create({
+            data: {
+              match: match.id,
+              marketType: 'moneyline',
+              name: 'Ganador del Partido',
+              selection: 'Visitante',
+              odds: 3.50,
+              isActive: true,
+              result: 'pending'
+            }
+          });
+
+          marketsCreated += 3;
+        }
       }
-      console.log(`✅ ${matches.length * 3} mercados de apuestas creados`);
+
+      if (marketsCreated > 0) {
+        console.log(`✅ ${marketsCreated} mercados de apuestas creados`);
+      } else {
+        console.log(`ℹ️  Los partidos ya tienen mercados`);
+      }
     } else {
-      console.log(`ℹ️  Ya existen mercados, omitiendo...`);
+      console.log(`ℹ️  No hay partidos para crear mercados`);
     }
 
     console.log('\n✨ ¡Seed completado exitosamente!\n');
