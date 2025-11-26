@@ -218,7 +218,7 @@ function generateChampionsMatches(tomorrow, teams) {
     return {
       homeTeam: homeTeam.id,
       awayTeam: awayTeam.id,
-      startTime: matchDateTime.toISOString(),
+      matchDate: matchDateTime.toISOString(),
       status: 'scheduled',
       venue: match.venue,
       competition: match.competition,
