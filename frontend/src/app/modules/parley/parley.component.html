@@ -98,10 +98,16 @@
               <!-- Match Teams -->
               <div class="match-teams">
                 <div class="team home">
+                  @if (match.homeTeam?.logoUrl) {
+                    <img [src]="match.homeTeam.logoUrl" [alt]="match.homeTeam.name" class="team-logo" />
+                  }
                   <span class="team-name">{{ match.homeTeam?.name }}</span>
                 </div>
                 <div class="vs">vs</div>
                 <div class="team away">
+                  @if (match.awayTeam?.logoUrl) {
+                    <img [src]="match.awayTeam.logoUrl" [alt]="match.awayTeam.name" class="team-logo" />
+                  }
                   <span class="team-name">{{ match.awayTeam?.name }}</span>
                 </div>
               </div>
@@ -109,7 +115,7 @@
               <!-- Markets -->
               @if (match.markets && match.markets.length > 0) {
                 <div class="markets-container">
-                  <!-- Ganador del Partido (1X2) -->
+                  <!-- Ganador del Partido (Moneyline) -->
                   @if (getMarketsByType(match.markets, 'moneyline').length > 0) {
                     <div class="market-group">
                       <h4 class="market-title">Ganador del Partido</h4>
@@ -120,7 +126,7 @@
                             [class.selected]="isMarketSelected(market.id)"
                             (click)="toggleMarket(market, match)"
                           >
-                            <span class="market-name">{{ market.name }}</span>
+                            <span class="market-selection">{{ market.selection }}</span>
                             <span class="market-odds">{{ market.odds | number:'1.2-2' }}</span>
                           </button>
                         }
@@ -139,7 +145,7 @@
                             [class.selected]="isMarketSelected(market.id)"
                             (click)="toggleMarket(market, match)"
                           >
-                            <span class="market-name">{{ market.name }}</span>
+                            <span class="market-selection">{{ market.selection }}</span>
                             <span class="market-odds">{{ market.odds | number:'1.2-2' }}</span>
                           </button>
                         }
@@ -158,7 +164,7 @@
                             [class.selected]="isMarketSelected(market.id)"
                             (click)="toggleMarket(market, match)"
                           >
-                            <span class="market-name">{{ market.name }}</span>
+                            <span class="market-selection">{{ market.selection }}</span>
                             <span class="market-odds">{{ market.odds | number:'1.2-2' }}</span>
                           </button>
                         }
@@ -235,13 +241,12 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="userCedula">Cédula *</label>
+                    <label for="userCedula">Cédula</label>
                     <input
                       type="text"
                       id="userCedula"
                       formControlName="userCedula"
-                      placeholder="Ej: V-12345678"
-                      required
+                      placeholder="Ej: V-12345678 (opcional)"
                     />
                   </div>
 

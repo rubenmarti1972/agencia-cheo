@@ -125,37 +125,37 @@ const SPORTS_DATA = [
   { name: 'Tenis', slug: 'tenis', isActive: true }
 ];
 
-// Equipos de Champions League
+// Equipos de Champions League con logos
 const CHAMPIONS_TEAMS = [
   // Liga Española
-  { name: 'Real Madrid', shortName: 'RMA', country: 'España', league: 'La Liga' },
-  { name: 'Barcelona', shortName: 'BAR', country: 'España', league: 'La Liga' },
-  { name: 'Atlético Madrid', shortName: 'ATM', country: 'España', league: 'La Liga' },
+  { name: 'Real Madrid', shortName: 'RMA', country: 'España', league: 'La Liga', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg' },
+  { name: 'Barcelona', shortName: 'BAR', country: 'España', league: 'La Liga', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg' },
+  { name: 'Atlético Madrid', shortName: 'ATM', country: 'España', league: 'La Liga', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg' },
 
   // Liga Inglesa
-  { name: 'Manchester City', shortName: 'MCI', country: 'Inglaterra', league: 'Premier League' },
-  { name: 'Arsenal', shortName: 'ARS', country: 'Inglaterra', league: 'Premier League' },
-  { name: 'Liverpool', shortName: 'LIV', country: 'Inglaterra', league: 'Premier League' },
-  { name: 'Manchester United', shortName: 'MUN', country: 'Inglaterra', league: 'Premier League' },
+  { name: 'Manchester City', shortName: 'MCI', country: 'Inglaterra', league: 'Premier League', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg' },
+  { name: 'Arsenal', shortName: 'ARS', country: 'Inglaterra', league: 'Premier League', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg' },
+  { name: 'Liverpool', shortName: 'LIV', country: 'Inglaterra', league: 'Premier League', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg' },
+  { name: 'Manchester United', shortName: 'MUN', country: 'Inglaterra', league: 'Premier League', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg' },
 
   // Liga Alemana
-  { name: 'Bayern Munich', shortName: 'BAY', country: 'Alemania', league: 'Bundesliga' },
-  { name: 'Borussia Dortmund', shortName: 'DOR', country: 'Alemania', league: 'Bundesliga' },
-  { name: 'RB Leipzig', shortName: 'RBL', country: 'Alemania', league: 'Bundesliga' },
+  { name: 'Bayern Munich', shortName: 'BAY', country: 'Alemania', league: 'Bundesliga', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg' },
+  { name: 'Borussia Dortmund', shortName: 'DOR', country: 'Alemania', league: 'Bundesliga', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg' },
+  { name: 'RB Leipzig', shortName: 'RBL', country: 'Alemania', league: 'Bundesliga', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg' },
 
   // Liga Italiana
-  { name: 'Inter de Milán', shortName: 'INT', country: 'Italia', league: 'Serie A' },
-  { name: 'AC Milan', shortName: 'MIL', country: 'Italia', league: 'Serie A' },
-  { name: 'Juventus', shortName: 'JUV', country: 'Italia', league: 'Serie A' },
+  { name: 'Inter de Milán', shortName: 'INT', country: 'Italia', league: 'Serie A', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/05/FC_Internazionale_Milano_2021.svg' },
+  { name: 'AC Milan', shortName: 'MIL', country: 'Italia', league: 'Serie A', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg' },
+  { name: 'Juventus', shortName: 'JUV', country: 'Italia', league: 'Serie A', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Juventus_FC_-_pictogram_black_%28Italy%2C_2017%29.svg' },
 
   // Liga Francesa
-  { name: 'PSG', shortName: 'PSG', country: 'Francia', league: 'Ligue 1' },
-  { name: 'AS Monaco', shortName: 'MON', country: 'Francia', league: 'Ligue 1' },
+  { name: 'PSG', shortName: 'PSG', country: 'Francia', league: 'Ligue 1', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg' },
+  { name: 'AS Monaco', shortName: 'MON', country: 'Francia', league: 'Ligue 1', logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Logo_AS_Monaco_FC_%282023%29.svg' },
 
   // Otras ligas
-  { name: 'Benfica', shortName: 'BEN', country: 'Portugal', league: 'Liga Portugal' },
-  { name: 'FC Porto', shortName: 'POR', country: 'Portugal', league: 'Liga Portugal' },
-  { name: 'Ajax', shortName: 'AJA', country: 'Holanda', league: 'Eredivisie' }
+  { name: 'Benfica', shortName: 'BEN', country: 'Portugal', league: 'Liga Portugal', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/a/a2/SL_Benfica_logo.svg' },
+  { name: 'FC Porto', shortName: 'POR', country: 'Portugal', league: 'Liga Portugal', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/f/f1/FC_Porto.svg' },
+  { name: 'Ajax', shortName: 'AJA', country: 'Holanda', league: 'Eredivisie', logoUrl: 'https://upload.wikimedia.org/wikipedia/en/7/79/Ajax_Amsterdam.svg' }
 ];
 
 /**
@@ -235,10 +235,10 @@ function generateChampionsMatches(tomorrow, teams) {
 function generateMarketsForMatch(match) {
   const markets = [];
 
-  // MERCADO 1X2 (Ganador del partido)
+  // MERCADO MONEYLINE (Ganador del partido)
   markets.push(
     {
-      marketType: '1X2',
+      marketType: 'moneyline',
       name: 'Ganador del Partido',
       selection: `${match.homeTeamObj.shortName} (Local)`,
       odds: (Math.random() * (2.5 - 1.5) + 1.5).toFixed(2),
@@ -246,7 +246,7 @@ function generateMarketsForMatch(match) {
       result: 'pending'
     },
     {
-      marketType: '1X2',
+      marketType: 'moneyline',
       name: 'Ganador del Partido',
       selection: 'Empate',
       odds: (Math.random() * (3.8 - 3.0) + 3.0).toFixed(2),
@@ -254,7 +254,7 @@ function generateMarketsForMatch(match) {
       result: 'pending'
     },
     {
-      marketType: '1X2',
+      marketType: 'moneyline',
       name: 'Ganador del Partido',
       selection: `${match.awayTeamObj.shortName} (Visitante)`,
       odds: (Math.random() * (3.5 - 2.0) + 2.0).toFixed(2),
@@ -597,7 +597,7 @@ async function seed({ strapi }) {
     const usedMatches = new Set();
 
     for (const market of allMarkets) {
-      if (market.marketType === '1X2' && market.selection.includes('Local') && !usedMatches.has(market.match.id)) {
+      if (market.marketType === 'moneyline' && market.selection.includes('Local') && !usedMatches.has(market.match.id)) {
         selectedMarkets.push(market);
         usedMatches.add(market.match.id);
         if (selectedMarkets.length === 4) break;
