@@ -99,14 +99,14 @@
               <div class="match-teams">
                 <div class="team home">
                   @if (match.homeTeam?.logoUrl) {
-                    <img [src]="match.homeTeam.logoUrl" [alt]="match.homeTeam.name" class="team-logo" />
+                    <img [src]="match.homeTeam!.logoUrl" [alt]="match.homeTeam!.name" class="team-logo" />
                   }
                   <span class="team-name">{{ match.homeTeam?.name }}</span>
                 </div>
                 <div class="vs">vs</div>
                 <div class="team away">
                   @if (match.awayTeam?.logoUrl) {
-                    <img [src]="match.awayTeam.logoUrl" [alt]="match.awayTeam.name" class="team-logo" />
+                    <img [src]="match.awayTeam!.logoUrl" [alt]="match.awayTeam!.name" class="team-logo" />
                   }
                   <span class="team-name">{{ match.awayTeam?.name }}</span>
                 </div>
