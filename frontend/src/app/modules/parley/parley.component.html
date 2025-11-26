@@ -60,12 +60,26 @@
             <h4>Tus Selecciones:</h4>
             @for (leg of successTicket()!.ticket.legs; track leg.id) {
               <div class="selection-detail">
-                <div class="selection-match">
-                  {{ leg.market?.match?.homeTeam?.name }} vs {{ leg.market?.match?.awayTeam?.name }}
-                </div>
-                <div class="selection-pick">
-                  <span>{{ leg.market?.name }}</span>
-                  <strong>{{ leg.odds | number:'1.2-2' }}</strong>
+                <div class="selection-match-info">
+                  <div class="match-teams-compact">
+                    <div class="team-compact">
+                      @if (leg.market?.match?.homeTeam?.logoUrl) {
+                        <img [src]="leg.market.match.homeTeam.logoUrl" [alt]="leg.market.match.homeTeam.name" class="team-logo-small" />
+                      }
+                      <span>{{ leg.market?.match?.homeTeam?.name }}</span>
+                    </div>
+                    <span class="vs-compact">vs</span>
+                    <div class="team-compact">
+                      @if (leg.market?.match?.awayTeam?.logoUrl) {
+                        <img [src]="leg.market.match.awayTeam.logoUrl" [alt]="leg.market.match.awayTeam.name" class="team-logo-small" />
+                      }
+                      <span>{{ leg.market?.match?.awayTeam?.name }}</span>
+                    </div>
+                  </div>
+                  <div class="selection-pick">
+                    <span class="pick-label">{{ leg.market?.name }}</span>
+                    <strong class="pick-odds">{{ leg.odds | number:'1.2-2' }}</strong>
+                  </div>
                 </div>
               </div>
             }
@@ -98,10 +112,16 @@
               <!-- Match Teams -->
               <div class="match-teams">
                 <div class="team home">
+                  @if (match.homeTeam?.logoUrl) {
+                    <img [src]="match.homeTeam.logoUrl" [alt]="match.homeTeam.name" class="team-logo" />
+                  }
                   <span class="team-name">{{ match.homeTeam?.name }}</span>
                 </div>
                 <div class="vs">vs</div>
                 <div class="team away">
+                  @if (match.awayTeam?.logoUrl) {
+                    <img [src]="match.awayTeam.logoUrl" [alt]="match.awayTeam.name" class="team-logo" />
+                  }
                   <span class="team-name">{{ match.awayTeam?.name }}</span>
                 </div>
               </div>
@@ -112,7 +132,7 @@
                   <!-- Ganador del Partido (1X2) -->
                   @if (getMarketsByType(match.markets, 'moneyline').length > 0) {
                     <div class="market-group">
-                      <h4 class="market-title">Ganador del Partido</h4>
+                      <h4 class="market-title">1X2 - Resultado Final</h4>
                       <div class="markets-grid">
                         @for (market of getMarketsByType(match.markets, 'moneyline'); track market.id) {
                           <button
@@ -190,8 +210,18 @@
                 <div class="selection-item">
                   <button class="remove-btn" (click)="removeMarket(market.id)" title="Eliminar">×</button>
                   <div class="selection-info">
-                    <div class="selection-match">
-                      {{ market.match?.homeTeam?.name }} vs {{ market.match?.awayTeam?.name }}
+                    <div class="selection-match-header">
+                      <div class="teams-inline">
+                        @if (market.match?.homeTeam?.logoUrl) {
+                          <img [src]="market.match.homeTeam.logoUrl" [alt]="market.match.homeTeam.name" class="team-logo-tiny" />
+                        }
+                        <span class="team-name-short">{{ market.match?.homeTeam?.name }}</span>
+                        <span class="vs-tiny">vs</span>
+                        @if (market.match?.awayTeam?.logoUrl) {
+                          <img [src]="market.match.awayTeam.logoUrl" [alt]="market.match.awayTeam.name" class="team-logo-tiny" />
+                        }
+                        <span class="team-name-short">{{ market.match?.awayTeam?.name }}</span>
+                      </div>
                     </div>
                     <div class="selection-pick">
                       <strong>{{ market.name }}</strong>
@@ -232,6 +262,9 @@
                       placeholder="Ej: Juan Pérez"
                       required
                     />
+                    @if (betForm.get('userName')?.invalid && betForm.get('userName')?.touched) {
+                      <small class="error-text">El nombre es requerido</small>
+                    }
                   </div>
 
                   <div class="form-group">
@@ -243,6 +276,9 @@
                       placeholder="Ej: V-12345678"
                       required
                     />
+                    @if (betForm.get('userCedula')?.invalid && betForm.get('userCedula')?.touched) {
+                      <small class="error-text">La cédula es requerida</small>
+                    }
                   </div>
 
                   <div class="form-group">
@@ -254,6 +290,11 @@
                       placeholder="Ej: 04121234567"
                       required
                     />
+                    @if (betForm.get('userPhone')?.hasError('required') && betForm.get('userPhone')?.touched) {
+                      <small class="error-text">El teléfono es requerido</small>
+                    } @else if (betForm.get('userPhone')?.hasError('pattern') && betForm.get('userPhone')?.touched) {
+                      <small class="error-text">Debe tener 10-11 dígitos (Ej: 04121234567)</small>
+                    }
                   </div>
                 </div>
 
@@ -268,10 +309,15 @@
                       id="betAmount"
                       formControlName="betAmount"
                       min="1"
+                      step="0.01"
                       placeholder="Ingresa el monto"
                       required
                     />
-                    <small>Mínimo: Bs. 1.00</small>
+                    @if (betForm.get('betAmount')?.invalid && betForm.get('betAmount')?.touched) {
+                      <small class="error-text">El monto debe ser mayor a Bs. 1.00</small>
+                    } @else {
+                      <small>Mínimo: Bs. 1.00</small>
+                    }
                   </div>
 
                   <!-- Botones de Montos Rápidos -->

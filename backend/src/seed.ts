@@ -240,18 +240,54 @@ export async function runSeed() {
 
     if (existingTeams.length === 0 && futbol) {
       const TEAMS_DATA = [
-        { name: 'Real Madrid', sport: futbol.id, country: 'España' },
-        { name: 'Barcelona', sport: futbol.id, country: 'España' },
-        { name: 'Manchester United', sport: futbol.id, country: 'Inglaterra' },
-        { name: 'Liverpool', sport: futbol.id, country: 'Inglaterra' },
-        { name: 'Bayern Munich', sport: futbol.id, country: 'Alemania' },
-        { name: 'PSG', sport: futbol.id, country: 'Francia' }
+        {
+          name: 'Real Madrid',
+          shortName: 'RMA',
+          sport: futbol.id,
+          country: 'España',
+          logoUrl: 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg'
+        },
+        {
+          name: 'Barcelona',
+          shortName: 'BAR',
+          sport: futbol.id,
+          country: 'España',
+          logoUrl: 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg'
+        },
+        {
+          name: 'Manchester United',
+          shortName: 'MUN',
+          sport: futbol.id,
+          country: 'Inglaterra',
+          logoUrl: 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg'
+        },
+        {
+          name: 'Liverpool',
+          shortName: 'LIV',
+          sport: futbol.id,
+          country: 'Inglaterra',
+          logoUrl: 'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg'
+        },
+        {
+          name: 'Bayern Munich',
+          shortName: 'BAY',
+          sport: futbol.id,
+          country: 'Alemania',
+          logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282017%29.svg'
+        },
+        {
+          name: 'PSG',
+          shortName: 'PSG',
+          sport: futbol.id,
+          country: 'Francia',
+          logoUrl: 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg'
+        }
       ];
 
       for (const team of TEAMS_DATA) {
         await strapi.db.query('api::team.team').create({ data: team });
       }
-      console.log(`✅ ${TEAMS_DATA.length} equipos creados`);
+      console.log(`✅ ${TEAMS_DATA.length} equipos creados con logos`);
     } else {
       console.log(`ℹ️  Ya existen equipos, omitiendo...`);
     }
@@ -330,12 +366,12 @@ export async function runSeed() {
           const homeTeamName = match.homeTeam?.name || 'Local';
           const awayTeamName = match.awayTeam?.name || 'Visitante';
 
-          // Crear markets con nombres descriptivos
+          // Crear markets con nombres descriptivos estilo casa de apuestas profesional
           await strapi.db.query('api::market.market').create({
             data: {
               match: match.id,
               marketType: 'moneyline',
-              name: `${homeTeamName} (Gana)`,
+              name: `1 - ${homeTeamName}`,
               selection: 'home',
               odds: 2.10,
               isActive: true,
@@ -347,7 +383,7 @@ export async function runSeed() {
             data: {
               match: match.id,
               marketType: 'moneyline',
-              name: 'Empate',
+              name: `X - Empate`,
               selection: 'draw',
               odds: 3.20,
               isActive: true,
@@ -359,7 +395,7 @@ export async function runSeed() {
             data: {
               match: match.id,
               marketType: 'moneyline',
-              name: `${awayTeamName} (Gana)`,
+              name: `2 - ${awayTeamName}`,
               selection: 'away',
               odds: 3.50,
               isActive: true,

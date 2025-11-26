@@ -41,7 +41,7 @@ export class ParleyComponent implements OnInit {
 
   constructor() {
     this.betForm = this.fb.group({
-      betAmount: [0, [Validators.required, Validators.min(1)]],
+      betAmount: [null, [Validators.required, Validators.min(1)]],
       userName: ['', [Validators.required]],
       userCedula: ['', [Validators.required]],
       userPhone: ['', [Validators.required, Validators.pattern(/^\d{10,11}$/)]]
