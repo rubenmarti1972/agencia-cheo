@@ -54,6 +54,7 @@ export class ParleyService extends ApiService {
       `&populate[homeTeam]=true` +
       `&populate[awayTeam]=true` +
       `&populate[sport]=true` +
+      `&populate[markets]=true` +
       `&sort=matchDate:asc`;
 
     return this.get<StrapiCollectionResponse<Match>>(`/matches?${query}`);
@@ -118,7 +119,7 @@ export class ParleyService extends ApiService {
       `&populate[homeTeam]=true` +
       `&populate[awayTeam]=true` +
       `&populate[sport]=true` +
-      `&populate[markets][filters][isActive]=true` +
+      `&populate[markets]=true` +
       `&sort=matchDate:asc` +
       `&pagination[limit]=20`;
 
