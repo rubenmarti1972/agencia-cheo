@@ -18,6 +18,11 @@
     margin-bottom: var(--spacing-lg);
     color: white;
   }
+
+  .text-aqua {
+    color: #7FFFD4; // Verde agua claro (aquamarine)
+    text-shadow: 2px 2px 8px rgba(127, 255, 212, 0.4);
+  }
 }
 
 .hero-subtitle {
