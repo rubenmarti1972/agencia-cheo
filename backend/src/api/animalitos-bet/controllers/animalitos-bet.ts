@@ -1,7 +1,8 @@
 // @ts-nocheck
 import crypto from 'crypto';
+import { factories } from '@strapi/strapi';
 
-export default {
+export default factories.createCoreController('api::animalitos-bet.animalitos-bet', ({ strapi }) => ({
   /**
    * POST /api/animalitos/place-bet
    *
@@ -33,7 +34,7 @@ export default {
     try {
       // Obtener el sorteo con su juego
       const draw = await strapi.entityService.findOne('api::animalitos-draw.animalitos-draw', drawId, {
-        populate: ['game']
+        populate: ['game'],
       });
 
       if (!draw) {
@@ -77,7 +78,7 @@ export default {
 
       // Buscar el animalito
       const animalitos = await strapi.entityService.findMany('api::animalito.animalito', {
-        filters: { number: animalitoNumber }
+        filters: { number: animalitoNumber },
       });
       const animalitosList = Array.isArray(animalitos) ? animalitos : animalitos ? [animalitos] : [];
 
@@ -104,8 +105,8 @@ export default {
           status: 'pending',
           userName,
           userPhone,
-          paidAmount: 0
-        }
+          paidAmount: 0,
+        },
       });
 
       return ctx.send({
@@ -114,16 +115,16 @@ export default {
           bet: await strapi.entityService.findOne('api::animalitos-bet.animalitos-bet', bet.id, {
             populate: {
               draw: {
-                populate: ['game']
+                populate: ['game'],
               },
-              animalito: true
-            }
-          })
-        }
+              animalito: true,
+            },
+          }),
+        },
       });
     } catch (error) {
       strapi.log.error('Error placing animalitos bet:', error);
       return ctx.internalServerError('Error placing bet');
     }
-  }
-};
+  },
+}));

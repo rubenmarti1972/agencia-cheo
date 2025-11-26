@@ -2,8 +2,8 @@ export default {
   routes: [
     {
       method: 'POST',
-      path: '/animalitos/place-bet',
-      handler: 'api::animalitos-bet.animalitos-bet.placeBet',
+      path: '/parley/place-ticket',
+      handler: 'api::parley-ticket.parley-ticket.placeTicket',
       config: {
         auth: false,
         policies: [],

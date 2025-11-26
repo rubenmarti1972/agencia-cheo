@@ -1,14 +1,3 @@
-export default {
-  routes: [
-    {
-      method: 'POST',
-      path: '/parley/place-ticket',
-      handler: 'parley-ticket.placeTicket',
-      config: {
-        auth: false,
-        policies: [],
-        middlewares: [],
-      },
-    },
-  ],
-};
+import { factories } from '@strapi/strapi';
+
+export default factories.createCoreRouter('api::parley-ticket.parley-ticket');

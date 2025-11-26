@@ -3,22 +3,9 @@ import crypto from 'crypto';
 import { factories } from '@strapi/strapi';
 
 export default factories.createCoreController('api::lottery.lottery', ({ strapi }) => ({
-  /**
-   * POST /api/loterias/place-bet
-   *
-   * Body:
-   * {
-   *   "drawId": number,
-   *   "betNumber": string,
-   *   "betAmount": number,
-   *   "userName"?: string,
-   *   "userPhone"?: string
-   * }
-   */
   async placeBet(ctx) {
     const { drawId, betNumber, betAmount, userName, userPhone } = ctx.request.body;
 
-    // Validaciones básicas
     if (!drawId || !betNumber || !betAmount) {
       return ctx.badRequest('drawId, betNumber, and betAmount are required');
     }
@@ -28,70 +15,53 @@ export default factories.createCoreController('api::lottery.lottery', ({ strapi 
     }
 
     try {
-      // Obtener el sorteo con su lotería
       const draw = await strapi.entityService.findOne(
         'api::lottery-draw.lottery-draw',
         drawId,
-        {
-          populate: ['lottery'],
-        }
+        { populate: ['lottery'] }
       );
 
       if (!draw) {
         return ctx.notFound('Draw not found');
       }
 
-      // @ts-ignore - Strapi types
-      const lottery = draw.lottery;
+      const lottery = (draw as any).lottery;
 
       if (!lottery) {
         return ctx.badRequest('Lottery not found for this draw');
       }
 
-      // Validar que la lotería está activa
       if (!lottery.isActive) {
         return ctx.badRequest('This lottery is not active');
       }
 
-      // Validar estado del sorteo
       if (draw.status !== 'open') {
         return ctx.badRequest(`Draw is ${draw.status}, cannot place bets`);
       }
 
-      // Validar hora de cierre
       const drawDateTime = new Date(`${draw.drawDate}T${draw.drawTime}`);
-      const closeTime = new Date(
-        drawDateTime.getTime() - draw.closeMinutesBefore * 60000
-      );
+      const closeTime = new Date(drawDateTime.getTime() - draw.closeMinutesBefore * 60000);
       const now = new Date();
 
       if (now >= closeTime) {
         return ctx.badRequest('Betting is closed for this draw');
       }
 
-      // Validar montos mínimo y máximo
       if (betAmount < lottery.minBetAmount) {
-        return ctx.badRequest(
-          `Minimum bet amount is ${lottery.minBetAmount}`
-        );
+        return ctx.badRequest(`Minimum bet amount is ${lottery.minBetAmount}`);
       }
 
       if (betAmount > lottery.maxBetAmount) {
-        return ctx.badRequest(
-          `Maximum bet amount is ${lottery.maxBetAmount}`
-        );
+        return ctx.badRequest(`Maximum bet amount is ${lottery.maxBetAmount}`);
       }
 
-      // Generar código único de ticket
       const ticketCode = `LOT-${Date.now()}-${crypto
         .randomBytes(4)
         .toString('hex')
         .toUpperCase()}`;
 
-      // Calcular ganancia potencial
       const potentialWin = betAmount * lottery.payoutMultiplier;
 
-      // Crear la apuesta
       const bet = await strapi.entityService.create(
         'api::lottery-bet.lottery-bet',
         {

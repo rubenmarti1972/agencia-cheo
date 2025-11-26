@@ -1,8 +1,9 @@
 // @ts-nocheck
 
 import crypto from 'crypto';
+import { factories } from '@strapi/strapi';
 
-export default {
+export default factories.createCoreController('api::parley-ticket.parley-ticket', ({ strapi }) => ({
   /**
    * POST /api/parley/place-ticket
    *
@@ -33,19 +34,19 @@ export default {
     try {
       // Obtener todos los mercados seleccionados
       const markets = await Promise.all(
-        marketIds.map(id =>
+        marketIds.map((id) =>
           strapi.entityService.findOne('api::market.market', id, {
             populate: {
               match: {
-                populate: ['homeTeam', 'awayTeam', 'sport']
-              }
-            }
+                populate: ['homeTeam', 'awayTeam', 'sport'],
+              },
+            },
           })
         )
       );
 
       // Validar que todos los mercados existen
-      const notFound = markets.findIndex(m => !m);
+      const notFound = markets.findIndex((m) => !m);
       if (notFound !== -1) {
         return ctx.badRequest(`Market with id ${marketIds[notFound]} not found`);
       }
@@ -53,7 +54,7 @@ export default {
       const existingMarkets = markets.filter(Boolean) as NonNullable<typeof markets[number]>[];
 
       // Validar que todos los mercados están activos
-      const inactiveMarket = existingMarkets.find(m => !m.isActive);
+      const inactiveMarket = existingMarkets.find((m) => !m.isActive);
       if (inactiveMarket) {
         return ctx.badRequest(`Market ${inactiveMarket.id} is not active`);
       }
@@ -97,20 +98,20 @@ export default {
           status: 'pending',
           userName,
           userPhone,
-          paidAmount: 0
-        }
+          paidAmount: 0,
+        },
       });
 
       // Crear los legs (selecciones)
-      const legs = await Promise.all(
-        existingMarkets.map(market =>
+      await Promise.all(
+        existingMarkets.map((market) =>
           strapi.entityService.create('api::parley-leg.parley-leg', {
             data: {
               ticket: ticket.id,
               market: market.id,
               odds: market.odds,
-              status: 'pending'
-            }
+              status: 'pending',
+            },
           })
         )
       );
@@ -123,24 +124,24 @@ export default {
               market: {
                 populate: {
                   match: {
-                    populate: ['homeTeam', 'awayTeam', 'sport']
-                  }
-                }
-              }
-            }
-          }
-        }
+                    populate: ['homeTeam', 'awayTeam', 'sport'],
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
       return ctx.send({
         data: {
           ticketCode,
-          ticket: fullTicket
-        }
+          ticket: fullTicket,
+        },
       });
     } catch (error) {
       strapi.log.error('Error placing parley ticket:', error);
       return ctx.internalServerError('Error placing parley ticket');
     }
-  }
-};
+  },
+}));
