@@ -110,12 +110,13 @@ export class ParleyService extends ApiService {
    * Obtener todos los partidos próximos (independiente del deporte)
    */
   getUpcomingMatches(): Observable<StrapiCollectionResponse<Match>> {
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const nowISO = now.toISOString();
 
     const query =
       `filters[status][$in][0]=scheduled` +
       `&filters[status][$in][1]=live` +
-      `&filters[matchDate][$gte]=${today}` +
+      `&filters[matchDate][$gte]=${nowISO}` +
       `&populate[homeTeam]=true` +
       `&populate[awayTeam]=true` +
       `&populate[sport]=true` +

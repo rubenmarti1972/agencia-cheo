@@ -272,14 +272,14 @@ export async function runSeed() {
           sport: futbol.id,
           homeTeam: teams[0].id,
           awayTeam: teams[1].id,
-          startTime: `${tomorrowStr}T18:00:00.000Z`,
+          matchDate: `${tomorrowStr}T18:00:00.000Z`,
           status: 'scheduled'
         },
         {
           sport: futbol.id,
           homeTeam: teams[2].id,
           awayTeam: teams[3].id,
-          startTime: `${tomorrowStr}T20:00:00.000Z`,
+          matchDate: `${tomorrowStr}T20:00:00.000Z`,
           status: 'scheduled'
         }
       ];
