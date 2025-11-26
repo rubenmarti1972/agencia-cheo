@@ -1,54 +1,55 @@
 /* ========================================
    AGENCIA CHEO - Plataforma de Apuestas
-   Paleta de Colores Verde 60/30/10
+   Paleta de Colores Profesional 60/30/10
    ======================================== */
 
 :root {
-  // Color Principal - Verde Claro (60% de uso - PREDOMINANTE)
-  --color-primary: #659980;
-  --color-primary-light: #7FB09A;
-  --color-primary-dark: #4B8266;
-  --color-primary-50: rgba(101, 153, 128, 0.05);
-  --color-primary-100: rgba(101, 153, 128, 0.1);
-  --color-primary-200: rgba(101, 153, 128, 0.2);
+  // Color Principal - Azul Rey (60% de uso - PREDOMINANTE)
+  --color-primary: #1E40AF;
+  --color-primary-light: #3B82F6;
+  --color-primary-dark: #1E3A8A;
+  --color-primary-50: rgba(30, 64, 175, 0.05);
+  --color-primary-100: rgba(30, 64, 175, 0.1);
+  --color-primary-200: rgba(30, 64, 175, 0.2);
 
-  // Color Secundario - Dorado/Naranja (30% de uso)
-  --color-secondary: #E9A655;
-  --color-secondary-light: #EEBB75;
-  --color-secondary-dark: #D68F35;
-  --color-secondary-50: rgba(233, 166, 85, 0.05);
-  --color-secondary-100: rgba(233, 166, 85, 0.1);
+  // Color Secundario - Dorado Premium (30% de uso)
+  --color-secondary: #F59E0B;
+  --color-secondary-light: #FBBF24;
+  --color-secondary-dark: #D97706;
+  --color-secondary-50: rgba(245, 158, 11, 0.05);
+  --color-secondary-100: rgba(245, 158, 11, 0.1);
 
-  // Color Acento - Lavanda (10% de uso - MÍNIMO)
-  --color-accent: #BEB5C5;
-  --color-accent-light: #D4CEDD;
-  --color-accent-dark: #A89CB0;
+  // Color Acento - Verde Esmeralda (10% de uso - MÍNIMO)
+  --color-accent: #10B981;
+  --color-accent-light: #34D399;
+  --color-accent-dark: #059669;
 
   // Grises y Neutros
-  --color-background: #FAFAFA;
-  --color-background-dark: #1F2937;
+  --color-background: #F8FAFC;
+  --color-background-dark: #1E293B;
   --color-surface: #FFFFFF;
-  --color-surface-dark: #374151;
+  --color-surface-dark: #334155;
 
-  --color-text-primary: #111827;
-  --color-text-secondary: #6B7280;
-  --color-text-light: #9CA3AF;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-text-light: #94A3B8;
   --color-text-inverse: #FFFFFF;
 
   // Estados
-  --color-success: #659980;
-  --color-warning: #E9A655;
-  --color-error: #DC2626;
-  --color-info: #6B7280;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
 
   // Bordes y sombras
-  --color-border: #E5E7EB;
-  --color-border-dark: #4B5563;
+  --color-border: #E2E8F0;
+  --color-border-dark: #475569;
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
 
   // Espaciado consistente
   --spacing-xs: 0.25rem;   // 4px
@@ -108,7 +109,8 @@ body {
   font-size: var(--font-size-md);
   line-height: 1.6;
   color: var(--color-text-primary);
-  background-color: var(--color-background);
+  background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 50%, #F8FAFC 100%);
+  background-attachment: fixed;
   min-height: 100vh;
 }
 
@@ -232,18 +234,39 @@ a {
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   padding: var(--spacing-lg);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(30, 64, 175, 0.08);
   transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 50%, var(--color-accent) 100%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
 
   &:hover {
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+    border-color: rgba(30, 64, 175, 0.15);
+
+    &::before {
+      opacity: 1;
+    }
   }
 }
 
 .card-highlight {
   border: 2px solid var(--color-primary);
   background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-surface) 100%);
+  box-shadow: var(--shadow-lg);
 }
 
 /* ========================================
