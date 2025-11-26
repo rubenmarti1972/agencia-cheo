@@ -57,7 +57,12 @@ export class ParleyComponent implements OnInit {
 
     this.parleyService.getUpcomingMatches().subscribe({
       next: (response) => {
-        this.matches.set(response.data);
+        // Filtrar solo markets activos en cada partido
+        const matchesWithActiveMarkets = response.data.map(match => ({
+          ...match,
+          markets: match.markets?.filter(market => market.isActive) || []
+        }));
+        this.matches.set(matchesWithActiveMarkets);
         this.loading.set(false);
       },
       error: (err) => {
