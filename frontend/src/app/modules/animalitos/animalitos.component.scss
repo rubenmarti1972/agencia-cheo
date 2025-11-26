@@ -115,8 +115,8 @@
 
   &:hover:not(.inactive) {
     transform: translateY(-8px);
-    box-shadow: var(--shadow-xl);
-    border-color: var(--color-accent);
+    box-shadow: var(--shadow-2xl);
+    border-color: var(--color-primary);
   }
 
   &.inactive {
@@ -125,7 +125,7 @@
   }
 
   h3 {
-    color: var(--color-accent);
+    color: var(--color-primary);
     margin-bottom: var(--spacing-md);
   }
 
@@ -176,8 +176,8 @@
 
   &:hover:not(.closed) {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--color-accent);
+    box-shadow: var(--shadow-2xl);
+    border-color: var(--color-primary);
   }
 
   &.closed {
@@ -193,7 +193,7 @@
 
     h4 {
       margin: 0;
-      color: var(--color-secondary);
+      color: var(--color-primary);
     }
   }
 
@@ -214,9 +214,9 @@
 
 .animalitos-star-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: var(--spacing-xl);
-  padding: var(--spacing-xl);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-2xl);
+  padding: var(--spacing-2xl);
   justify-items: center;
   align-items: center;
 }
@@ -224,11 +224,11 @@
 @keyframes star-pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(233, 166, 85, 0.7);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
   }
   50% {
     transform: scale(1.05);
-    box-shadow: 0 0 0 15px rgba(233, 166, 85, 0);
+    box-shadow: 0 0 0 15px rgba(245, 158, 11, 0);
   }
 }
 
@@ -265,24 +265,24 @@
     transform: translateY(-20px) scale(1.1);
 
     .animalito-number-circle {
-      box-shadow: 0 20px 40px rgba(101, 153, 128, 0.6);
-      border-color: var(--color-secondary);
+      box-shadow: 0 20px 40px rgba(30, 64, 175, 0.6);
+      border-color: var(--color-accent);
       transform: scale(1.05);
     }
 
     .animalito-emoji-circle {
-      box-shadow: 0 15px 30px rgba(233, 166, 85, 0.6);
-      border-color: var(--color-primary);
+      box-shadow: 0 20px 40px rgba(245, 158, 11, 0.6);
+      border-color: var(--color-accent);
       animation: emoji-bounce 0.6s ease-in-out;
     }
 
     .animalito-number-display {
-      color: var(--color-secondary);
-      text-shadow: 3px 3px 10px rgba(233, 166, 85, 0.7);
+      color: var(--color-accent);
+      text-shadow: 3px 3px 10px rgba(16, 185, 129, 0.7);
     }
 
     .animalito-emoji {
-      transform: scale(1.3);
+      transform: scale(1.2);
     }
 
     .animalito-name-text {
@@ -306,20 +306,20 @@
   justify-content: center;
 }
 
-// Círculo GRANDE para el NÚMERO
+// Círculo GRANDE para el NÚMERO (MISMO TAMAÑO)
 .animalito-number-circle {
   position: absolute;
   top: 0;
   left: 0;
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   background: white;
   border: 6px solid var(--color-primary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 25px rgba(101, 153, 128, 0.4);
+  box-shadow: 0 8px 25px rgba(30, 64, 175, 0.4);
   transition: all var(--transition-base);
   z-index: 1;
 }
@@ -333,26 +333,26 @@
   transition: all var(--transition-base);
 }
 
-// Círculo GRANDE para el EMOJI (superpuesto)
+// Círculo GRANDE para el EMOJI (MISMO TAMAÑO)
 .animalito-emoji-circle {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 100px;
-  height: 100px;
-  background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
-  border: 5px solid var(--color-secondary);
+  width: 110px;
+  height: 110px;
+  background: linear-gradient(135deg, #fff 0%, #FEF3C7 100%);
+  border: 6px solid var(--color-secondary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 20px rgba(233, 166, 85, 0.4);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
   transition: all var(--transition-base);
   z-index: 2;
 }
 
 .animalito-emoji {
-  font-size: 3rem;
+  font-size: 3.2rem;
   transition: all var(--transition-base);
   filter: drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.2));
 }
@@ -394,15 +394,16 @@
 
 .bet-info {
   h3 {
-    color: var(--color-accent);
+    color: var(--color-primary);
     margin-bottom: var(--spacing-lg);
   }
 
   .selected-animalito {
-    background: linear-gradient(135deg, var(--color-accent-light) 0%, var(--color-accent) 100%);
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
     padding: var(--spacing-xl);
     border-radius: var(--radius-xl);
     margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-lg);
 
     .animalito-display {
       text-align: center;
@@ -410,14 +411,15 @@
       .number {
         font-size: 5rem;
         font-weight: var(--font-weight-bold);
-        color: var(--color-secondary-dark);
+        color: white;
         line-height: 1;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
       }
 
       .name {
         font-size: var(--font-size-xl);
         font-weight: var(--font-weight-bold);
-        color: var(--color-secondary-dark);
+        color: var(--color-secondary);
         text-transform: uppercase;
         margin-top: var(--spacing-sm);
       }
@@ -438,18 +440,21 @@
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-lg);
-    background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-surface) 100%);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, var(--color-surface) 100%);
     border-radius: var(--radius-lg);
     margin-bottom: var(--spacing-lg);
     border: 2px solid var(--color-accent);
+    box-shadow: var(--shadow-md);
 
     span {
       font-size: var(--font-size-lg);
       font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
     }
 
     strong {
       font-size: var(--font-size-2xl);
+      color: var(--color-accent);
     }
   }
 
@@ -464,18 +469,18 @@
   }
 
   .animalitos-star-container {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: var(--spacing-lg);
-    padding: var(--spacing-md);
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--spacing-xl);
+    padding: var(--spacing-lg);
   }
 
   .animalito-card-star {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
 
     .animalito-number-circle {
-      width: 100px;
-      height: 100px;
+      width: 90px;
+      height: 90px;
       border-width: 5px;
     }
 
@@ -484,13 +489,13 @@
     }
 
     .animalito-emoji-circle {
-      width: 85px;
-      height: 85px;
-      border-width: 4px;
+      width: 90px;
+      height: 90px;
+      border-width: 5px;
     }
 
     .animalito-emoji {
-      font-size: 2.5rem;
+      font-size: 2.6rem;
     }
 
     .animalito-name-text {
