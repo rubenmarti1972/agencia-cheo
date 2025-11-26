@@ -8,7 +8,9 @@
     "start": "npm run prepare:schemas && strapi start",
     "build": "strapi build && ./copy-schemas.sh",
     "strapi": "strapi",
-    "postbuild": "./copy-schemas.sh"
+    "postbuild": "./copy-schemas.sh",
+    "seed": "node scripts/seed_enhanced.js",
+    "seed:original": "node scripts/seed.js"
   },
   "keywords": [],
   "author": "",

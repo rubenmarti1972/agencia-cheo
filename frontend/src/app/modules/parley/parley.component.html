@@ -98,35 +98,56 @@
 
           @if (selectedMarkets().length >= 2) {
             <form [formGroup]="betForm" (ngSubmit)="placeBet()" class="bet-form">
-              <div class="odds-summary">
-                <span>Cuota Total:</span>
-                <strong class="text-accent">{{ totalOdds() | number:'1.2-2' }}</strong>
+              <div class="calculation-breakdown">
+                <h4>📊 Cálculo del Parley</h4>
+                <div class="odds-calculation">
+                  <div class="calc-label">Cuotas seleccionadas:</div>
+                  <div class="odds-list">
+                    @for (market of selectedMarkets(); track market.id; let i = $index) {
+                      <span class="odd-value">
+                        {{ market.odds }}{{ i < selectedMarkets().length - 1 ? ' × ' : '' }}
+                      </span>
+                    }
+                  </div>
+                </div>
+                <div class="total-odds-display">
+                  <span>Cuota Total:</span>
+                  <strong class="odds-total">{{ totalOdds() | number:'1.2-2' }}</strong>
+                </div>
               </div>
 
               <div class="form-group">
-                <label for="betAmount">Monto (Bs.) *</label>
-                <input type="number" id="betAmount" formControlName="betAmount" min="1" />
+                <label for="betAmount">💵 Monto a Apostar (Bs.) *</label>
+                <input type="number" id="betAmount" formControlName="betAmount" min="1" placeholder="Ingresa tu apuesta" />
+                <small class="text-secondary">Mínimo: Bs. 1.00</small>
               </div>
 
               <div class="form-group">
-                <label for="userName">Nombre (opcional)</label>
-                <input type="text" id="userName" formControlName="userName" />
+                <label for="userName">👤 Nombre (opcional)</label>
+                <input type="text" id="userName" formControlName="userName" placeholder="Tu nombre" />
               </div>
 
               <div class="form-group">
-                <label for="userPhone">Teléfono (opcional)</label>
-                <input type="tel" id="userPhone" formControlName="userPhone" />
+                <label for="userPhone">📱 Teléfono (opcional)</label>
+                <input type="tel" id="userPhone" formControlName="userPhone" placeholder="04121234567" />
               </div>
 
               @if (potentialWin() > 0) {
-                <div class="potential-win">
-                  <span>Ganancia Potencial:</span>
-                  <strong class="text-accent">Bs. {{ potentialWin() | number:'1.2-2' }}</strong>
+                <div class="potential-win-card">
+                  <div class="win-calculation">
+                    <span class="calc-formula">
+                      Bs. {{ betForm.get('betAmount')?.value || 0 | number:'1.2-2' }} × {{ totalOdds() | number:'1.2-2' }}
+                    </span>
+                  </div>
+                  <div class="win-result">
+                    <span>🏆 Ganancia Potencial:</span>
+                    <strong class="win-amount">Bs. {{ potentialWin() | number:'1.2-2' }}</strong>
+                  </div>
                 </div>
               }
 
               <button type="submit" class="btn btn-accent btn-lg" [disabled]="betForm.invalid || loading()">
-                {{ loading() ? 'Procesando...' : 'Confirmar Parley' }}
+                {{ loading() ? '⏳ Procesando...' : '✅ Confirmar Parley' }}
               </button>
             </form>
           }
