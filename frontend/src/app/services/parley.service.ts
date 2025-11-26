@@ -47,36 +47,55 @@ export class ParleyService extends ApiService {
    * Obtener partidos programados o en vivo de un deporte
    */
   getMatchesBySport(sportId: number): Observable<StrapiCollectionResponse<Match>> {
-    return this.get<StrapiCollectionResponse<Match>>(
-      `/matches?filters[sport][id]=${sportId}&filters[status][$in][0]=scheduled&filters[status][$in][1]=live&populate[homeTeam]=*&populate[awayTeam]=*&populate[sport]=*&sort=matchDate:asc`
-    );
+    const query =
+      `filters[sport][id]=${sportId}` +
+      `&filters[status][$in][0]=scheduled` +
+      `&filters[status][$in][1]=live` +
+      `&populate[homeTeam]=true` +
+      `&populate[awayTeam]=true` +
+      `&populate[sport]=true` +
+      `&sort=matchDate:asc`;
+
+    return this.get<StrapiCollectionResponse<Match>>(`/matches?${query}`);
   }
 
   /**
    * Obtener un partido específico con sus mercados
    */
   getMatchById(id: number): Observable<StrapiResponse<Match>> {
-    return this.get<StrapiResponse<Match>>(
-      `/matches/${id}?populate[homeTeam]=*&populate[awayTeam]=*&populate[sport]=*&populate[markets]=*`
-    );
+    const query =
+      `populate[homeTeam]=true` +
+      `&populate[awayTeam]=true` +
+      `&populate[sport]=true` +
+      `&populate[markets]=true`;
+
+    return this.get<StrapiResponse<Match>>(`/matches/${id}?${query}`);
   }
 
   /**
    * Obtener mercados activos de un partido
    */
   getMarketsByMatch(matchId: number): Observable<StrapiCollectionResponse<Market>> {
-    return this.get<StrapiCollectionResponse<Market>>(
-      `/markets?filters[match][id]=${matchId}&filters[isActive]=true&populate[match][populate][homeTeam]=*&populate[match][populate][awayTeam]=*`
-    );
+    const query =
+      `filters[match][id]=${matchId}` +
+      `&filters[isActive]=true` +
+      `&populate[match][populate][homeTeam]=true` +
+      `&populate[match][populate][awayTeam]=true` +
+      `&populate[match][populate][sport]=true`;
+
+    return this.get<StrapiCollectionResponse<Market>>(`/markets?${query}`);
   }
 
   /**
    * Obtener un mercado específico
    */
   getMarketById(id: number): Observable<StrapiResponse<Market>> {
-    return this.get<StrapiResponse<Market>>(
-      `/markets/${id}?populate[match][populate][homeTeam]=*&populate[match][populate][awayTeam]=*&populate[match][populate][sport]=*`
-    );
+    const query =
+      `populate[match][populate][homeTeam]=true` +
+      `&populate[match][populate][awayTeam]=true` +
+      `&populate[match][populate][sport]=true`;
+
+    return this.get<StrapiResponse<Market>>(`/markets/${id}?${query}`);
   }
 
   /**
@@ -92,21 +111,34 @@ export class ParleyService extends ApiService {
   getUpcomingMatches(): Observable<StrapiCollectionResponse<Match>> {
     const today = new Date().toISOString().split('T')[0];
 
-    return this.get<StrapiCollectionResponse<Match>>(
-      `/matches?filters[status][$in][0]=scheduled&filters[status][$in][1]=live&filters[matchDate][$gte]=${today}&populate[homeTeam]=*&populate[awayTeam]=*&populate[sport]=*&sort=matchDate:asc&pagination[limit]=20`
-    );
+    const query =
+      `filters[status][$in][0]=scheduled` +
+      `&filters[status][$in][1]=live` +
+      `&filters[matchDate][$gte]=${today}` +
+      `&populate[homeTeam]=true` +
+      `&populate[awayTeam]=true` +
+      `&populate[sport]=true` +
+      `&sort=matchDate:asc` +
+      `&pagination[limit]=20`;
+
+    return this.get<StrapiCollectionResponse<Match>>(`/matches?${query}`);
   }
 
   /**
    * Obtener resultados de partidos finalizados
    */
   getFinishedMatches(date?: string): Observable<StrapiCollectionResponse<Match>> {
-    let endpoint = '/matches?filters[status]=finished&populate[homeTeam]=*&populate[awayTeam]=*&populate[sport]=*&sort=matchDate:desc';
+    let query =
+      `filters[status]=finished` +
+      `&populate[homeTeam]=true` +
+      `&populate[awayTeam]=true` +
+      `&populate[sport]=true` +
+      `&sort=matchDate:desc`;
 
     if (date) {
-      endpoint += `&filters[matchDate]=${date}`;
+      query += `&filters[matchDate]=${date}`;
     }
 
-    return this.get<StrapiCollectionResponse<Match>>(endpoint);
+    return this.get<StrapiCollectionResponse<Match>>(`/matches?${query}`);
   }
 }
