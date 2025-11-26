@@ -659,6 +659,27 @@
     }
   }
 
+  .validation-hints {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--color-error);
+    border-radius: var(--radius-md);
+
+    .text-error {
+      color: #991b1b;
+      font-size: var(--font-size-sm);
+
+      div {
+        margin-bottom: var(--spacing-xs);
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
   button[type="submit"] {
     width: 100%;
   }
