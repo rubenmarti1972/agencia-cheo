@@ -128,7 +128,7 @@
                 </div>
               </div>
               @if (draw.status === 'open') {
-                <button class="btn btn-accent">Apostar</button>
+                <button class="btn btn-secondary">💰 Apostar</button>
               }
             </div>
           } @empty {
@@ -225,13 +225,13 @@
 
             <button
               type="submit"
-              class="btn btn-accent btn-lg"
+              class="btn btn-secondary btn-lg"
               [disabled]="betForm.invalid || loading()"
             >
               @if (loading()) {
-                <span>Procesando...</span>
+                <span>⏳ Procesando...</span>
               } @else {
-                <span>Confirmar Apuesta</span>
+                <span>✅ Confirmar Apuesta</span>
               }
             </button>
           </form>

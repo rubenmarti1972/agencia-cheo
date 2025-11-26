@@ -84,7 +84,7 @@
             @if (!game.isActive) {
               <span class="badge badge-warning">Inactivo</span>
             } @else {
-              <button class="btn btn-accent">Jugar</button>
+              <button class="btn btn-secondary">🎮 Jugar</button>
             }
           </div>
         } @empty {
@@ -117,7 +117,7 @@
                 </span>
               </div>
               @if (draw.status === 'open') {
-                <button class="btn btn-accent">Seleccionar</button>
+                <button class="btn btn-primary">Seleccionar</button>
               }
             </div>
           } @empty {
@@ -242,13 +242,13 @@
 
             <button
               type="submit"
-              class="btn btn-accent btn-lg"
+              class="btn btn-secondary btn-lg"
               [disabled]="betForm.invalid || loading()"
             >
               @if (loading()) {
-                <span>Procesando...</span>
+                <span>⏳ Procesando...</span>
               } @else {
-                <span>Confirmar Apuesta</span>
+                <span>✅ Confirmar Apuesta</span>
               }
             </button>
           </form>
