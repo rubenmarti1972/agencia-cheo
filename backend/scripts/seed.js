@@ -49,7 +49,7 @@ const ANIMALITOS_DATA = [
 // Loterías venezolanas
 const LOTTERIES_DATA = [
   {
-    name: 'Lotería del Zulia',
+    name: 'Zulia',
     description: 'Lotería tradicional del estado Zulia',
     isActive: true,
     minBetAmount: 1.0,
@@ -65,7 +65,7 @@ const LOTTERIES_DATA = [
     payoutMultiplier: 65.0
   },
   {
-    name: 'Lotería de Caracas',
+    name: 'Caracas',
     description: 'Lotería de la capital',
     isActive: true,
     minBetAmount: 1.0,
@@ -73,7 +73,7 @@ const LOTTERIES_DATA = [
     payoutMultiplier: 75.0
   },
   {
-    name: 'Chance Táchira',
+    name: 'Táchira',
     description: 'Lotería del estado Táchira',
     isActive: true,
     minBetAmount: 0.5,
@@ -353,6 +353,32 @@ async function seed({ strapi }) {
       console.log(`✅ ${matches.length * 3} mercados de apuestas creados`);
     } else {
       console.log(`ℹ️  Ya existen mercados, omitiendo...`);
+    }
+
+    // 10. Habilitar todos los permisos públicos para pruebas
+    console.log('\n🔓 Activando permisos públicos para pruebas...');
+    const publicRole = await strapi.db
+      .query('plugin::users-permissions.role')
+      .findOne({ where: { type: 'public' } });
+
+    if (publicRole) {
+      const usersPermissionsService = strapi.plugin('users-permissions').service('users-permissions');
+      const roleService = strapi.plugin('users-permissions').service('role');
+
+      const permissionsTemplate = usersPermissionsService.getActions({ defaultEnable: false });
+
+      Object.values(permissionsTemplate).forEach((typeConfig) => {
+        Object.values(typeConfig.controllers).forEach((controllerConfig) => {
+          Object.keys(controllerConfig).forEach((actionName) => {
+            controllerConfig[actionName].enabled = true;
+          });
+        });
+      });
+
+      await roleService.updateRole(publicRole.id, { permissions: permissionsTemplate });
+      console.log('✅ Permisos públicos activados para todos los endpoints de contenido');
+    } else {
+      console.log('⚠️  No se encontró el rol público, omitiendo configuración de permisos.');
     }
 
     console.log('\n✨ ¡Seed completado exitosamente!\n');
