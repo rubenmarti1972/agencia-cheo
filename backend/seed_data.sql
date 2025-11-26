@@ -42,10 +42,10 @@ ON CONFLICT (number) DO NOTHING;
 
 -- 2. Insert Lotteries
 INSERT INTO lotteries (name, description, is_active, min_bet_amount, max_bet_amount, payout_multiplier) VALUES
-('Lotería del Zulia', 'Lotería tradicional del estado Zulia', true, 1.0, 500.0, 70.0),
+('Zulia', 'Lotería tradicional del estado Zulia', true, 1.0, 500.0, 70.0),
 ('Triple Zulia', 'Triple sorteo diario del Zulia', true, 0.5, 300.0, 65.0),
-('Lotería de Caracas', 'Lotería de la capital', true, 1.0, 1000.0, 75.0),
-('Chance Táchira', 'Lotería del estado Táchira', true, 0.5, 400.0, 70.0)
+('Caracas', 'Lotería de la capital', true, 1.0, 1000.0, 75.0),
+('Táchira', 'Lotería del estado Táchira', true, 0.5, 400.0, 70.0)
 ON CONFLICT (name) DO NOTHING;
 
 -- 3. Insert Animalitos Games
