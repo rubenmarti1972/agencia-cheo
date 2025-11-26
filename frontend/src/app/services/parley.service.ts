@@ -118,6 +118,7 @@ export class ParleyService extends ApiService {
       `&populate[homeTeam]=true` +
       `&populate[awayTeam]=true` +
       `&populate[sport]=true` +
+      `&populate[markets][filters][isActive]=true` +
       `&sort=matchDate:asc` +
       `&pagination[limit]=20`;
 

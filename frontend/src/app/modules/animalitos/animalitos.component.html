@@ -150,8 +150,14 @@
               (click)="selectAnimalito(animalito)"
             >
               <div class="animalito-inner">
-                <div class="animalito-number-display">{{ animalito.number }}</div>
-                <div class="animalito-emoji">{{ getAnimalitoEmoji(animalito.number) }}</div>
+                <!-- Círculo GRANDE para el NÚMERO -->
+                <div class="animalito-number-circle">
+                  <div class="animalito-number-display">{{ animalito.number }}</div>
+                </div>
+                <!-- Círculo GRANDE para el EMOJI -->
+                <div class="animalito-emoji-circle">
+                  <div class="animalito-emoji">{{ getAnimalitoEmoji(animalito.number) }}</div>
+                </div>
                 <div class="animalito-name-text">{{ animalito.name }}</div>
               </div>
             </div>
