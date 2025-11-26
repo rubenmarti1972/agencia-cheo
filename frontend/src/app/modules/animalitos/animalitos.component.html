@@ -135,17 +135,25 @@
       <div class="animalitos-section">
         <div class="section-header">
           <button class="btn btn-outline btn-sm" (click)="goBack()">← Volver</button>
-          <h2>Elige tu Animalito</h2>
+          <div class="header-title">
+            <h2>✨ Elige tu Animalito de la Suerte ✨</h2>
+            <p class="text-secondary">Del 1 al 36 - Haz clic en tu favorito</p>
+          </div>
         </div>
 
-        <div class="animalitos-grid">
+        <div class="animalitos-star-container">
           @for (animalito of animalitos(); track animalito.id) {
             <div
-              class="animalito-card"
+              class="animalito-card-star"
+              [class.pulse-animation]="animalito.number % 3 === 0"
+              [style.animation-delay]="(animalito.number * 0.05) + 's'"
               (click)="selectAnimalito(animalito)"
             >
-              <div class="animalito-number">{{ animalito.number }}</div>
-              <div class="animalito-name">{{ animalito.name }}</div>
+              <div class="animalito-inner">
+                <div class="animalito-emoji">{{ getAnimalitoEmoji(animalito.number) }}</div>
+                <div class="animalito-number-badge">{{ animalito.number }}</div>
+                <div class="animalito-name-text">{{ animalito.name }}</div>
+              </div>
             </div>
           }
         </div>

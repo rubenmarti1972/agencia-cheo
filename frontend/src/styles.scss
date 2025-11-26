@@ -4,24 +4,25 @@
    ======================================== */
 
 :root {
-  // Paleta Verde Principal (60% de uso)
-  --color-primary: #0D9F6E;
-  --color-primary-light: #10B981;
-  --color-primary-dark: #059669;
-  --color-primary-50: rgba(13, 159, 110, 0.05);
-  --color-primary-100: rgba(13, 159, 110, 0.1);
-  --color-primary-200: rgba(13, 159, 110, 0.2);
+  // Color Principal - Sage Green (60% de uso)
+  --color-primary: #659980;
+  --color-primary-light: #7FB09A;
+  --color-primary-dark: #4B8266;
+  --color-primary-50: rgba(101, 153, 128, 0.05);
+  --color-primary-100: rgba(101, 153, 128, 0.1);
+  --color-primary-200: rgba(101, 153, 128, 0.2);
 
-  // Verde Secundario (30% de uso)
-  --color-secondary: #1B5E3F;
-  --color-secondary-light: #236B4A;
-  --color-secondary-dark: #134534;
-  --color-secondary-50: rgba(27, 94, 63, 0.05);
+  // Color Secundario - Dorado Mostaza (30% de uso)
+  --color-secondary: #E9A655;
+  --color-secondary-light: #EEBB75;
+  --color-secondary-dark: #D68F35;
+  --color-secondary-50: rgba(233, 166, 85, 0.05);
+  --color-secondary-100: rgba(233, 166, 85, 0.1);
 
-  // Verde Acento (10% de uso - CTAs y highlights)
-  --color-accent: #4ADE80;
-  --color-accent-light: #6EE7A0;
-  --color-accent-dark: #22C55E;
+  // Color Acento - Lavanda (10% de uso - CTAs y highlights)
+  --color-accent: #BEB5C5;
+  --color-accent-light: #D4CEDD;
+  --color-accent-dark: #A89CB0;
 
   // Grises y Neutros
   --color-background: #FAFAFA;
@@ -35,10 +36,10 @@
   --color-text-inverse: #FFFFFF;
 
   // Estados
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-error: #EF4444;
-  --color-info: #3B82F6;
+  --color-success: #659980;
+  --color-warning: #E9A655;
+  --color-error: #DC2626;
+  --color-info: #6B7280;
 
   // Bordes y sombras
   --color-border: #E5E7EB;
@@ -465,5 +466,130 @@ label {
 
   &:hover {
     background: var(--color-primary-dark);
+  }
+}
+
+/* ========================================
+   Botón Flotante de WhatsApp
+   ======================================== */
+
+@keyframes whatsapp-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+@keyframes whatsapp-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+  animation: whatsapp-float 3s ease-in-out infinite;
+
+  .whatsapp-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: #25D366;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    animation: whatsapp-pulse 2s infinite;
+    border: none;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+      animation: none;
+
+      svg {
+        transform: scale(1.1) rotate(5deg);
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    svg {
+      width: 32px;
+      height: 32px;
+      fill: white;
+      transition: transform var(--transition-base);
+    }
+  }
+
+  .whatsapp-tooltip {
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--color-text-primary);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-base);
+    box-shadow: var(--shadow-md);
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 8px 0 8px 8px;
+      border-color: transparent transparent transparent var(--color-text-primary);
+    }
+  }
+
+  &:hover .whatsapp-tooltip {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .whatsapp-float {
+    bottom: 20px;
+    right: 20px;
+
+    .whatsapp-button {
+      width: 56px;
+      height: 56px;
+
+      svg {
+        width: 28px;
+        height: 28px;
+      }
+    }
+
+    .whatsapp-tooltip {
+      display: none;
+    }
   }
 }
