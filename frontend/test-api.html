@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Parley</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #0f0;
+        }
+        pre {
+            background: #000;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            background: #0080ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0060cc;
+        }
+        .section {
+            margin: 20px 0;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        h2 {
+            color: #ff0;
+        }
+        .error {
+            color: #f00;
+        }
+        .success {
+            color: #0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Test API Parley - Diagnóstico</h1>
+
+    <div class="section">
+        <h2>1. Verificar Conexión Backend</h2>
+        <button onclick="testBackend()">Test Backend</button>
+        <pre id="backend-result">Haz clic en el botón para probar</pre>
+    </div>
+
+    <div class="section">
+        <h2>2. Ver Todos los Matches (sin filtros)</h2>
+        <button onclick="getAllMatches()">Get All Matches</button>
+        <pre id="all-matches-result">Haz clic en el botón para probar</pre>
+    </div>
+
+    <div class="section">
+        <h2>3. Ver Matches con el Query del Parley</h2>
+        <button onclick="getUpcomingMatches()">Get Upcoming Matches (Query Actual)</button>
+        <pre id="upcoming-matches-result">Haz clic en el botón para probar</pre>
+    </div>
+
+    <div class="section">
+        <h2>4. Ver Todos los Markets</h2>
+        <button onclick="getAllMarkets()">Get All Markets</button>
+        <pre id="markets-result">Haz clic en el botón para probar</pre>
+    </div>
+
+    <div class="section">
+        <h2>5. Análisis del Problema</h2>
+        <button onclick="diagnose()">Diagnosticar</button>
+        <pre id="diagnosis-result">Haz clic para diagnóstico completo</pre>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:1337/api';
+
+        async function testBackend() {
+            const result = document.getElementById('backend-result');
+            result.textContent = 'Probando...';
+
+            try {
+                const response = await fetch(`${API_URL}/sports`);
+                const data = await response.json();
+                result.className = 'success';
+                result.textContent = `✅ Backend conectado\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                result.className = 'error';
+                result.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function getAllMatches() {
+            const result = document.getElementById('all-matches-result');
+            result.textContent = 'Cargando...';
+
+            try {
+                const response = await fetch(`${API_URL}/matches?populate=*`);
+                const data = await response.json();
+                result.className = 'success';
+                result.textContent = `Matches encontrados: ${data.data?.length || 0}\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                result.className = 'error';
+                result.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function getUpcomingMatches() {
+            const result = document.getElementById('upcoming-matches-result');
+            result.textContent = 'Cargando...';
+
+            const now = new Date();
+            const nowISO = now.toISOString();
+
+            const query =
+                `filters[status][$in][0]=scheduled` +
+                `&filters[status][$in][1]=live` +
+                `&filters[matchDate][$gte]=${nowISO}` +
+                `&populate[homeTeam]=true` +
+                `&populate[awayTeam]=true` +
+                `&populate[sport]=true` +
+                `&populate[markets]=true` +
+                `&sort=matchDate:asc` +
+                `&pagination[limit]=20`;
+
+            const url = `${API_URL}/matches?${query}`;
+
+            try {
+                result.textContent = `URL: ${url}\n\nCargando...`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                result.className = 'success';
+                result.textContent = `URL completa:\n${url}\n\nFecha actual (ISO): ${nowISO}\n\nMatches encontrados: ${data.data?.length || 0}\n\n${JSON.stringify(data, null, 2)}`;
+
+                if (data.data && data.data.length > 0) {
+                    const firstMatch = data.data[0];
+                    result.textContent += `\n\n📊 PRIMER PARTIDO:\n`;
+                    result.textContent += `- matchDate: ${firstMatch.matchDate}\n`;
+                    result.textContent += `- status: ${firstMatch.status}\n`;
+                    result.textContent += `- markets: ${firstMatch.markets?.length || 0}\n`;
+                    result.textContent += `- homeTeam: ${JSON.stringify(firstMatch.homeTeam)}\n`;
+                    result.textContent += `- awayTeam: ${JSON.stringify(firstMatch.awayTeam)}\n`;
+                }
+            } catch (error) {
+                result.className = 'error';
+                result.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function getAllMarkets() {
+            const result = document.getElementById('markets-result');
+            result.textContent = 'Cargando...';
+
+            try {
+                const response = await fetch(`${API_URL}/markets?populate=*`);
+                const data = await response.json();
+                result.className = 'success';
+                result.textContent = `Markets encontrados: ${data.data?.length || 0}\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                result.className = 'error';
+                result.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function diagnose() {
+            const result = document.getElementById('diagnosis-result');
+            result.textContent = '🔍 Diagnosticando...\n\n';
+
+            try {
+                // 1. Verificar matches
+                const matchesResp = await fetch(`${API_URL}/matches`);
+                const matchesData = await matchesResp.json();
+                const totalMatches = matchesData.data?.length || 0;
+
+                result.textContent += `1. Total de Matches en DB: ${totalMatches}\n`;
+
+                if (totalMatches > 0) {
+                    const match = matchesData.data[0];
+                    result.textContent += `   - Primer match ID: ${match.id}\n`;
+                    result.textContent += `   - matchDate: ${match.matchDate}\n`;
+                    result.textContent += `   - status: ${match.status}\n`;
+
+                    // 2. Verificar si tiene homeTeam y awayTeam
+                    const matchWithPopulate = await fetch(`${API_URL}/matches/${match.id}?populate=*`);
+                    const matchData = await matchWithPopulate.json();
+
+                    result.textContent += `\n2. Match con populate:\n`;
+                    result.textContent += `   - homeTeam: ${matchData.data.homeTeam ? 'SÍ ✅' : 'NO ❌'}\n`;
+                    result.textContent += `   - awayTeam: ${matchData.data.awayTeam ? 'SÍ ✅' : 'NO ❌'}\n`;
+                    result.textContent += `   - sport: ${matchData.data.sport ? 'SÍ ✅' : 'NO ❌'}\n`;
+                    result.textContent += `   - markets: ${matchData.data.markets?.length || 0}\n`;
+                }
+
+                // 3. Verificar fecha
+                const now = new Date();
+                const nowISO = now.toISOString();
+                result.textContent += `\n3. Fecha Actual:\n`;
+                result.textContent += `   - ISO: ${nowISO}\n`;
+
+                if (totalMatches > 0) {
+                    const match = matchesData.data[0];
+                    const matchDate = new Date(match.matchDate);
+                    const nowDate = new Date(nowISO);
+                    result.textContent += `   - Match Date: ${match.matchDate}\n`;
+                    result.textContent += `   - ¿Match en futuro?: ${matchDate > nowDate ? 'SÍ ✅' : 'NO ❌'}\n`;
+                    result.textContent += `   - Diferencia: ${Math.round((matchDate - nowDate) / 1000 / 60 / 60)} horas\n`;
+                }
+
+                // 4. Probar el query exacto
+                const upcomingResp = await fetch(`${API_URL}/matches?filters[status][$in][0]=scheduled&filters[status][$in][1]=live&filters[matchDate][$gte]=${nowISO}&populate=*`);
+                const upcomingData = await upcomingResp.json();
+
+                result.textContent += `\n4. Query con Filtros:\n`;
+                result.textContent += `   - Matches encontrados: ${upcomingData.data?.length || 0}\n`;
+
+                if (upcomingData.data?.length === 0 && totalMatches > 0) {
+                    result.textContent += `\n⚠️ PROBLEMA IDENTIFICADO:\n`;
+                    result.textContent += `   Hay ${totalMatches} partidos en la DB pero el query con filtros no los encuentra.\n`;
+                    result.textContent += `   Posibles causas:\n`;
+                    result.textContent += `   - matchDate está en el pasado\n`;
+                    result.textContent += `   - status no es 'scheduled' o 'live'\n`;
+                    result.textContent += `   - Problema con el formato de fecha\n`;
+                }
+
+                result.textContent += `\n📋 DATOS COMPLETOS:\n${JSON.stringify(upcomingData, null, 2)}`;
+
+            } catch (error) {
+                result.className = 'error';
+                result.textContent += `\n❌ Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
