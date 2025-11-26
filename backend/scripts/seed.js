@@ -274,7 +274,19 @@ async function seed({ strapi }) {
 
     const existingMatches = await strapi.db.query('api::match.match').findMany();
 
-    if (existingMatches.length === 0 && teams.length >= 4 && futbol) {
+    // Eliminar partidos y mercados viejos
+    if (existingMatches.length > 0) {
+      console.log(`Eliminando ${existingMatches.length} partidos antiguos...`);
+      for (const match of existingMatches) {
+        const oldMarkets = await strapi.db.query('api::market.market').findMany({ where: { match: match.id } });
+        for (const market of oldMarkets) {
+          await strapi.db.query('api::market.market').delete({ where: { id: market.id } });
+        }
+        await strapi.db.query('api::match.match').delete({ where: { id: match.id } });
+      }
+    }
+
+    if (teams.length >= 6 && futbol) {
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       const tomorrowStr = tomorrow.toISOString().split('T')[0];
@@ -284,15 +296,25 @@ async function seed({ strapi }) {
           sport: futbol.id,
           homeTeam: teams[0].id,
           awayTeam: teams[1].id,
-          startTime: `${tomorrowStr}T18:00:00.000Z`,
-          status: 'scheduled'
+          matchDate: `${tomorrowStr}T18:00:00.000Z`,
+          status: 'scheduled',
+          venue: 'Santiago Bernabéu'
         },
         {
           sport: futbol.id,
           homeTeam: teams[2].id,
           awayTeam: teams[3].id,
-          startTime: `${tomorrowStr}T20:00:00.000Z`,
-          status: 'scheduled'
+          matchDate: `${tomorrowStr}T20:00:00.000Z`,
+          status: 'scheduled',
+          venue: 'Old Trafford'
+        },
+        {
+          sport: futbol.id,
+          homeTeam: teams[4].id,
+          awayTeam: teams[5].id,
+          matchDate: `${tomorrowStr}T21:30:00.000Z`,
+          status: 'scheduled',
+          venue: 'Allianz Arena'
         }
       ];
 
@@ -303,7 +325,7 @@ async function seed({ strapi }) {
       }
       console.log(`✅ ${MATCHES_DATA.length} partidos creados`);
     } else {
-      console.log(`ℹ️  Ya existen partidos, omitiendo...`);
+      console.log(`⚠️  No hay suficientes equipos (se necesitan 6, hay ${teams.length})`);
     }
 
     // 9. Crear mercados de apuestas
