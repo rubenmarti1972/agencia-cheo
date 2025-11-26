@@ -259,6 +259,7 @@
                       placeholder="Ej: 04121234567"
                       required
                     />
+                    <small>Mínimo 7 caracteres</small>
                   </div>
                 </div>
 
@@ -313,6 +314,23 @@
                 >
                   {{ loading() ? '⏳ Procesando...' : '✅ Crear Ticket' }}
                 </button>
+
+                <!-- Debug: Mostrar estado del formulario -->
+                @if (betForm.invalid && selectedMarkets().length >= 2) {
+                  <div class="validation-hints">
+                    <small class="text-error">
+                      @if (betForm.get('userName')?.invalid) {
+                        <div>• Nombre requerido (mín. 3 caracteres)</div>
+                      }
+                      @if (betForm.get('userPhone')?.invalid) {
+                        <div>• Teléfono requerido (mín. 7 caracteres)</div>
+                      }
+                      @if (betForm.get('betAmount')?.invalid) {
+                        <div>• Monto debe ser mayor a Bs. 0</div>
+                      }
+                    </small>
+                  </div>
+                }
               </form>
             } @else {
               <div class="min-selections-warning">
