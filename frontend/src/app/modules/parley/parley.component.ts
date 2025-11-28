@@ -39,12 +39,17 @@ export class ParleyComponent implements OnInit {
     return amount * this.totalOdds();
   });
 
+  // Form validation state
+  isFormValid = computed(() => {
+    return this.betForm.valid && this.selectedMarkets().length >= 2;
+  });
+
   constructor() {
     this.betForm = this.fb.group({
-      betAmount: [0, [Validators.required, Validators.min(1)]],
-      userName: ['', [Validators.required]],
-      userCedula: ['', [Validators.required]],
-      userPhone: ['', [Validators.required, Validators.pattern(/^\d{10,11}$/)]]
+      betAmount: [null, [Validators.required, Validators.min(1)]],
+      userName: ['', [Validators.required, Validators.minLength(3)]],
+      userCedula: ['', [Validators.required, Validators.pattern(/^[VEJ]-?\d{6,8}$/i)]],
+      userPhone: ['', [Validators.required, Validators.pattern(/^(0414|0424|0412|0416|0426)\d{7}$/)]]
     });
   }
 
@@ -109,6 +114,7 @@ export class ParleyComponent implements OnInit {
       const matchSelection = current.find(m => m.match?.id === match.id);
       if (matchSelection) {
         this.error.set('No puedes seleccionar múltiples mercados del mismo partido');
+        setTimeout(() => this.error.set(null), 3000);
         return;
       }
 
@@ -123,8 +129,8 @@ export class ParleyComponent implements OnInit {
   }
 
   placeBet(): void {
-    if (this.betForm.invalid || this.selectedMarkets().length < 2) {
-      this.error.set('Debes seleccionar al menos 2 mercados y un monto válido');
+    if (!this.isFormValid()) {
+      this.error.set('Por favor completa todos los campos correctamente');
       return;
     }
 
@@ -159,6 +165,7 @@ export class ParleyComponent implements OnInit {
     this.successTicket.set(null);
     this.selectedMarkets.set([]);
     this.betForm.reset();
+    this.loadUpcomingMatches();
   }
 
   formatDate(dateStr: string): string {
@@ -169,5 +176,22 @@ export class ParleyComponent implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  /**
+   * Helper para mostrar errores de validación
+   */
+  getFieldError(fieldName: string): string | null {
+    const field = this.betForm.get(fieldName);
+    if (!field || !field.errors || !field.touched) return null;
+
+    if (field.errors['required']) return 'Este campo es obligatorio';
+    if (field.errors['min']) return 'El monto mínimo es Bs. 1';
+    if (field.errors['minlength']) return 'Nombre muy corto';
+    if (field.errors['pattern']) {
+      if (fieldName === 'userCedula') return 'Formato: V-12345678 o E-12345678';
+      if (fieldName === 'userPhone') return 'Formato: 04121234567';
+    }
+    return null;
   }
 }
